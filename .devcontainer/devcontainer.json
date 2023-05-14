@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.202.3/containers/python-3
+{
+  "name": "Java & PostgreSQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vscjava.vscode-spring-initializr",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "runem.lit-plugin"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+  "postCreateCommand": {
+    "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ]
+}

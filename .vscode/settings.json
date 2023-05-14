@@ -1,0 +1,8 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "maven.terminal.favorites": [
+        {
+            "command": "spring-boot:run",
+            "debug": false,
+        }
+    ],}
