@@ -30,3 +30,15 @@ export function getRelativeTimeString(date) {
   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
   return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
 }
+
+export function formatSize(size) {
+  for(const unit of ["", "K", "M"]) {
+    if (Math.abs(size) < 1024) {
+      return `${size.toFixed(1)} ${unit}B`;
+    }
+
+    size /= 1024;
+  }
+
+  return `${size.toFixed(1)} GB`;
+}

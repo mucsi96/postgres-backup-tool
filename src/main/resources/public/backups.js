@@ -3,10 +3,10 @@ import {
   html,
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
-import { fetchJSON, getRelativeTimeString } from "./utils.js";
+import { fetchJSON, formatSize, getRelativeTimeString } from "./utils.js";
 import { BackupRestoredEvent } from "./events.js";
 
-function format_retention(value) {
+function formatRetention(value) {
   if (!value) {
     return "";
   }
@@ -76,12 +76,12 @@ class AppBackups extends LitElement {
         }}
       >
         <app-td highlighted no-wrap
-          >${getRelativeTimeString(new Date(backup.last_modified))}</app-td
+          >${getRelativeTimeString(new Date(backup.lastModified))}</app-td
         >
         <app-td no-wrap>${backup.name}</app-td>
-        <app-td>${backup["total_count"]}</app-td>
-        <app-td>${backup.size}</app-td>
-        <app-td>${format_retention(backup["retention_period"])}</app-td>
+        <app-td>${backup.totalRowCount}</app-td>
+        <app-td no-wrap>${formatSize(backup.size)}</app-td>
+        <app-td>${formatRetention(backup.retentionPeriod)}</app-td>
         <app-td>
           <app-button
             ?disabled=${actionsDisabled}

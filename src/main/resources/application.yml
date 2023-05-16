@@ -1,0 +1,6 @@
+r2:
+  endpoint: ${DB_BACKUP_ENDPOINT_URL}
+  accessKey: ${DB_BACKUP_ACCESS_KEY_ID}
+  secretKey: ${DB_BACKUP_SECRET_ACCESS_KEY}
+  bucket: kubetools-backups
+  # bucket: ${DB_BACKUP_BUCKET}

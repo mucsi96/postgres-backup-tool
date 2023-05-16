@@ -5,4 +5,10 @@
             "command": "spring-boot:run",
             "debug": false,
         }
-    ],}
+    ],
+    "java.format.enabled": true,
+    "[java]": {
+        "editor.tabSize": 2
+    },
+    "java.format.settings.url": ".vscode/java-formatter.xml"
+}
