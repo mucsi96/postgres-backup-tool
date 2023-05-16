@@ -1,19 +1,29 @@
 package io.github.mucsi96.postgresbackuptool.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import io.github.mucsi96.postgresbackuptool.model.Database;
 import io.github.mucsi96.postgresbackuptool.model.Table;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class DatabaseService {
   private final JdbcTemplate jdbcTemplate;
+  private final String connectionString;
+
+  public DatabaseService(JdbcTemplate jdbcTemplate,
+      @Value("${postgres.connection-string}") String connectionString) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.connectionString = connectionString;
+  }
 
   public Database getDatabaseInfo() {
     List<Map<String, Object>> result = jdbcTemplate.queryForList(
@@ -34,6 +44,22 @@ public class DatabaseService {
     return Database.builder().tables(tables).totalRowCount(totalRowCount)
         .build();
 
+  }
+
+  public File createDump(int retentionPeriod)
+      throws IOException, InterruptedException {
+    String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+        .format(LocalDateTime.now());
+    String filename = String.format("%s.%s.%s.pgdump", timeString,
+        getDatabaseInfo().getTotalRowCount(), retentionPeriod);
+    Process process = new ProcessBuilder("pg_dump", "--dbname",
+        connectionString, "--format", "c", "--file", filename).start();
+    int exitCode = process.waitFor();
+    if (exitCode != 0) {
+      throw new RuntimeException("pg_dump returned " + exitCode);
+    }
+
+    return new File(filename);
   }
 
   private int getTableRowCount(String tableName) {

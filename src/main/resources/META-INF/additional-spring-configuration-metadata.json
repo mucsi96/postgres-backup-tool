@@ -10,13 +10,18 @@
     "description": "S3 bucket name"
   },
   {
-    "name": "s3.accessKey",
+    "name": "s3.access-key",
     "type": "java.lang.String",
     "description": "S3 accessKey"
   },
   {
-    "name": "s3.secretKey",
+    "name": "s3.secret-key",
     "type": "java.lang.String",
     "description": "S3 secretKey"
+  },
+  {
+    "name": "postgres.connection-string",
+    "type": "java.lang.String",
+    "description": "Connection string for pg_dump"
   }
 ]}

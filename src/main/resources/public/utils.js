@@ -5,9 +5,13 @@ export async function fetchJSON(url, options) {
     throw new Error("Fetch error");
   }
 
-  const data = await response.json();
+  try {
+    const data = await response.json();
 
-  return data;
+    return data;
+  } catch {
+    return undefined;
+  }
 }
 
 export function getRelativeTimeString(date) {
@@ -32,7 +36,7 @@ export function getRelativeTimeString(date) {
 }
 
 export function formatSize(size) {
-  for(const unit of ["", "K", "M"]) {
+  for (const unit of ["", "K", "M"]) {
     if (Math.abs(size) < 1024) {
       return `${size.toFixed(1)} ${unit}B`;
     }
