@@ -33,7 +33,7 @@ class App extends LitElement {
 
   static properties = {
     tables: { type: Array },
-    totalCount: { type: Number },
+    totalRowCount: { type: Number },
     backups: { type: Array },
   };
 
@@ -47,9 +47,9 @@ class App extends LitElement {
 
   async #fetchTables() {
     try {
-      const { tables, total_count } = await fetchJSON("/tables");
+      const { tables, totalRowCount } = await fetchJSON("/tables");
       this.tables = tables;
-      this.totalCount = total_count;
+      this.totalRowCount = totalRowCount;
     } catch (err) {
       this.tables = [];
       this.dispatchEvent(new AppErrorEvent("Unable to fetch tables", err));
@@ -77,7 +77,7 @@ class App extends LitElement {
         <div id="main">
           <app-tables
             .tables=${this.tables}
-            total-count=${this.totalCount}
+            total-count=${this.totalRowCount}
             @backup-created=${() => {
               this.#fetchBackups();
               this.dispatchEvent(

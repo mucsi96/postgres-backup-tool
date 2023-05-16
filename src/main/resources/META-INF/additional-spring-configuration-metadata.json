@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "s3.endpoint",
+    "type": "java.lang.String",
+    "description": "S3 endpoint url"
+  },
+  {
+    "name": "s3.bucket",
+    "type": "java.lang.String",
+    "description": "S3 bucket name"
+  },
+  {
+    "name": "s3.accessKey",
+    "type": "java.lang.String",
+    "description": "S3 accessKey"
+  },
+  {
+    "name": "s3.secretKey",
+    "type": "java.lang.String",
+    "description": "S3 secretKey"
+  }
+]}

@@ -19,7 +19,7 @@ public class BackupService {
   private final String bucketName;
 
   public BackupService(S3Client s3Client,
-      @Value("${r2.bucket}") String bucketName) {
+      @Value("${s3.bucket}") String bucketName) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
   }
