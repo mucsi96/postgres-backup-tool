@@ -55,4 +55,10 @@ public class BackupController {
 
     dumpFile.delete();
   }
+
+  @PostMapping("/cleanup")
+  @ResponseBody
+  void cleanup() {
+    backupService.cleanup();
+  }
 }

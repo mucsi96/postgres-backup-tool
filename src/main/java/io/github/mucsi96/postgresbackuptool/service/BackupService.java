@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,12 +19,15 @@ import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.Delete;
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.waiters.S3Waiter;
@@ -86,17 +93,39 @@ public class BackupService {
     return dumpFile;
   }
 
+  public void cleanup() {
+    List<ObjectIdentifier> backupsToCleanup = getBackups().stream()
+        .filter(this::shouldCleanup)
+        .map(backup -> ObjectIdentifier.builder().key(backup.getName()).build())
+        .toList();
+
+    if (backupsToCleanup.size() == 0) {
+      return;
+    }
+
+    // https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_DeleteObjects_section.html
+    s3Client.deleteObjects(DeleteObjectsRequest.builder().bucket(bucketName)
+        .delete(Delete.builder().objects(backupsToCleanup).build()).build());
+  }
+
   void tryCreateBackup(File dumpFile) {
     // https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_PutObject_section.html
     s3Client.putObject(PutObjectRequest.builder().bucket(bucketName)
         .key(dumpFile.getName()).build(), RequestBody.fromFile(dumpFile));
   }
 
-  private int getTotalCountFromName(S3Object s3Object) {
-    return Integer.parseInt(s3Object.key().split("\\.")[1]);
+  private int getTotalCountFromName(S3Object backup) {
+    return Integer.parseInt(backup.key().split("\\.")[1]);
   }
 
-  private int getRetentionPeriodFromName(S3Object s3Object) {
-    return Integer.parseInt(s3Object.key().split("\\.")[2]);
+  private int getRetentionPeriodFromName(S3Object backup) {
+    return Integer.parseInt(backup.key().split("\\.")[2]);
+  }
+
+  private boolean shouldCleanup(Backup backup) {
+    Instant cleanupDate = backup.getLastModified()
+        .plus(Duration.ofDays(backup.getRetentionPeriod()));
+
+    return cleanupDate.isBefore(LocalDateTime.now().toInstant(ZoneOffset.UTC));
   }
 }

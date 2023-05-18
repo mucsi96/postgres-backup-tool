@@ -3,6 +3,7 @@ package io.github.mucsi96.postgresbackuptool.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,6 @@ public class DatabaseService {
     List<Map<String, Object>> result = jdbcTemplate.queryForList(
         "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
 
-    // .name(table.get("table_name"))
-    // .rowCount(getTableRowCount(table.get("table_name")))
-
     List<Table> tables = result.stream().map(table -> {
       String tableName = (String) table.get("table_name");
       return Table.builder().name(tableName)
@@ -49,7 +47,7 @@ public class DatabaseService {
   public File createDump(int retentionPeriod)
       throws IOException, InterruptedException {
     String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-        .format(LocalDateTime.now());
+        .format(LocalDateTime.now().toInstant(ZoneOffset.UTC));
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
     Process process = new ProcessBuilder("pg_dump", "--dbname",
@@ -63,9 +61,11 @@ public class DatabaseService {
     return new File(filename);
   }
 
-  public void restoreDump(File dumpFile) throws IOException, InterruptedException {
-    Process process = new ProcessBuilder("pg_restore", "--clean", "--create", "--dbname", connectionString,
-    "--verbose", dumpFile.getName()).inheritIO().start();
+  public void restoreDump(File dumpFile)
+      throws IOException, InterruptedException {
+    Process process = new ProcessBuilder("pg_restore", "--clean", "--create",
+        "--dbname", connectionString, "--verbose", dumpFile.getName())
+            .inheritIO().start();
     process.waitFor();
   }
 

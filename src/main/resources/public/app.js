@@ -72,7 +72,7 @@ class App extends LitElement {
 
   render() {
     return html`
-      <app-header title="Kubetools Postgres Backup"></app-header>
+      <app-header title="Postgres Backup Tool"></app-header>
       <app-main>
         <div id="main">
           <app-tables
