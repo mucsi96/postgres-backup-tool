@@ -53,13 +53,20 @@ public class DatabaseService {
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
     Process process = new ProcessBuilder("pg_dump", "--dbname",
-        connectionString, "--format", "c", "--file", filename).start();
+        connectionString, "--format", "c", "--file", filename).inheritIO()
+            .start();
     int exitCode = process.waitFor();
     if (exitCode != 0) {
       throw new RuntimeException("pg_dump returned " + exitCode);
     }
 
     return new File(filename);
+  }
+
+  public void restoreDump(File dumpFile) throws IOException, InterruptedException {
+    Process process = new ProcessBuilder("pg_restore", "--clean", "--create", "--dbname", connectionString,
+    "--verbose", dumpFile.getName()).inheritIO().start();
+    process.waitFor();
   }
 
   private int getTableRowCount(String tableName) {

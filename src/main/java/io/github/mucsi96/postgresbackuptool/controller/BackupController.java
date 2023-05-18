@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.github.mucsi96.postgresbackuptool.model.Backup;
 import io.github.mucsi96.postgresbackuptool.service.BackupService;
@@ -19,7 +21,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
+@Validated
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class BackupController {
@@ -41,7 +44,15 @@ public class BackupController {
     backupService.createBackup(dumpFile);
 
     dumpFile.delete();
+  }
 
-    System.out.println(dumpFile);
+  @PostMapping("/restore/{key}")
+  @ResponseBody
+  void restore(@PathVariable String key)
+      throws IOException, InterruptedException {
+    File dumpFile = backupService.downloadBackup(key);
+    databaseService.restoreDump(dumpFile);
+
+    dumpFile.delete();
   }
 }
