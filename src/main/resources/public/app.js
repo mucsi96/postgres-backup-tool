@@ -11,6 +11,7 @@ import "./components/table.js";
 import "./components/loader.js";
 import "./components/badge.js";
 import "./components/notifications.js";
+import "./components/numberInput.js";
 import "./tables.js";
 import "./backups.js";
 import { AppErrorEvent } from "./events.js";

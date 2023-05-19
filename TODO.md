@@ -1,5 +1,3 @@
-- Adopt oklch.com to all colors
 - Create Docker image
 - Create endpoint which returns how much time ago happened the last backup
 - Add context path to backup app
-- Create number input component

@@ -30,41 +30,6 @@ class AppTables extends LitElement {
       display: grid;
       gap: 20px;
     }
-
-    label {
-      display: flex;
-      gap: 8px;
-      flex-direction: column;
-
-      color: white;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    input {
-      background-color: hsl(217, 19%, 27%);
-      border: 1px solid hsl(215, 14%, 34%);
-      color: white;
-      font-size: 14px;
-      font-weight: 400;
-      padding: 10px;
-      border-radius: 8px;
-      outline: none;
-    }
-
-    input:focus {
-      border: 1px solid hsl(218, 93%, 61%);
-      box-shadow: hsl(218, 93%, 61%) 0 0 0 1px;
-    }
-
-    input:invalid {
-      border: 1px solid hsl(0, 96%, 77%);
-      box-shadow: hsl(0, 96%, 77%) 0 0 0 1px;
-    }
-
-    input::-webkit-inner-spin-button {
-      opacity: 0 !important;
-    }
   `;
 
   constructor() {
@@ -112,18 +77,16 @@ class AppTables extends LitElement {
       </div>
       <div class="backup">
         <app-heading level="2">Backup</app-heading>
-        <label
-          >Retention period (days)
-          <input
-            type="number"
-            value=${this["retention-period"]}
-            min="1"
-            max="356"
-            step="1"
-            @change=${(event) => {
-              this["retention-period"] = event.target.value;
-            }}
-        /></label>
+        <app-number-input
+          value=${this["retention-period"]}
+          min="1"
+          max="356"
+          step="1"
+          @value-change=${(event) => {
+            this["retention-period"] = event.details;
+          }}
+          >Retention period (days)</app-number-input
+        >
         <section>
           <app-button
             ?disabled=${actionsDisabled}

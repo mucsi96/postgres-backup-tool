@@ -47,7 +47,7 @@ public class DatabaseService {
   public File createDump(int retentionPeriod)
       throws IOException, InterruptedException {
     String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-        .format(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        .format(LocalDateTime.now());
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
     Process process = new ProcessBuilder("pg_dump", "--dbname",

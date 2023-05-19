@@ -108,6 +108,8 @@ public class BackupService {
         .delete(Delete.builder().objects(backupsToCleanup).build()).build());
   }
 
+  public 
+
   void tryCreateBackup(File dumpFile) {
     // https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_PutObject_section.html
     s3Client.putObject(PutObjectRequest.builder().bucket(bucketName)
