@@ -7,6 +7,7 @@ Stack:
 - Java 11
 - Spring Boot 3
 - Web Components
+- Lit 2.x
 - Java AWS SDK 2.x 
 
 ## References
