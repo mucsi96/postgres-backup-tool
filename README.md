@@ -3,6 +3,12 @@ Simple PostgreSQL backup tool to S3 bucket with UI
 
 ![PostgreSQL backup tool screenshot](docs/postrgress-backup-tool-1.png)
 
+Stack:
+- Java 11
+- Spring Boot 3
+- Web Components
+- Java AWS SDK 2.x 
+
 ## References
 
 https://github.com/kananindzya/hello-world-aws-sdk-r2/blob/master/src/main/java/com/example/aws/api/r2/App.java
