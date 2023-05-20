@@ -19,6 +19,11 @@ class AppHeading extends LitElement {
       font-size: 21px;
       font-weight: 700;
     }
+
+    :host([level="3"]) {
+      font-size: 16px;
+      font-weight: 700;
+    }
   `;
 
   render() {

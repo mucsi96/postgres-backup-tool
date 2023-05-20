@@ -3,6 +3,7 @@ package io.github.mucsi96.postgresbackuptool.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -60,5 +61,11 @@ public class BackupController {
   @ResponseBody
   void cleanup() {
     backupService.cleanup();
+  }
+
+  @GetMapping("/last-backup-time")
+  @ResponseBody
+  Optional<String> lastBackupTime() {
+    return backupService.getLastBackupSecondsAgo();
   }
 }

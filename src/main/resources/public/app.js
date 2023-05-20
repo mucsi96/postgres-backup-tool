@@ -36,6 +36,7 @@ class App extends LitElement {
     tables: { type: Array },
     totalRowCount: { type: Number },
     backups: { type: Array },
+    lastBackupTime: { type: String },
   };
 
   constructor() {
@@ -66,14 +67,28 @@ class App extends LitElement {
     }
   }
 
+  async #fetchLastBackupTime() {
+    try {
+      this.lastBackupTime = await fetchJSON("/last-backup-time");
+    } catch (err) {
+      this.lastBackupTime = "";
+      this.dispatchEvent(
+        new AppErrorEvent("Unable to fetch last backup time", err)
+      );
+    }
+  }
+
   firstUpdated() {
     this.#fetchTables();
     this.#fetchBackups();
+    this.#fetchLastBackupTime();
   }
 
   render() {
     return html`
-      <app-header title="Postgres Backup Tool"></app-header>
+      <app-header title="Postgres Backup Tool" ]
+        ><app-heading level="3">Last backup <app-badge>${this.lastBackupTime}</app-badge></app-heading></app-header
+      >
       <app-main>
         <div id="main">
           <app-tables
@@ -81,12 +96,14 @@ class App extends LitElement {
             total-count=${this.totalRowCount}
             @backup-created=${() => {
               this.#fetchBackups();
+              this.#fetchLastBackupTime();
               this.dispatchEvent(
                 new SuccessNotificationEvent("Backup created")
               );
             }}
             @cleanup-finished=${() => {
               this.#fetchBackups();
+              this.#fetchLastBackupTime();
               this.dispatchEvent(
                 new SuccessNotificationEvent("Cleanup finished")
               );

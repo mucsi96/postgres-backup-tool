@@ -1,3 +1,2 @@
 - Create Docker image
-- Create endpoint which returns how much time ago happened the last backup
-- Add context path to backup app
+- Add context path to backup app using SERVER_SERVLET_CONTEXT_PATH environment variable from Kubernetes

@@ -17,12 +17,17 @@ class AppHeader extends LitElement {
       position: sticky;
       top: 0;
       z-index: 40;
+      font-family: system-ui;
+      font-size: 14px;
     }
 
     header {
       padding: 18px 1rem 19px;
       max-width: 90rem;
       margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     h1 {
@@ -37,8 +42,9 @@ class AppHeader extends LitElement {
     return html`
       <header>
         <h1>${this.title}</h1>
+        <slot></slot>
       </header>
-    `
+    `;
   }
 }
 

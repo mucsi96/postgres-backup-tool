@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -108,7 +109,10 @@ public class BackupService {
         .delete(Delete.builder().objects(backupsToCleanup).build()).build());
   }
 
-  public 
+  public Optional<String> getLastBackupSecondsAgo() {
+    return getBackups().stream().findFirst()
+        .map(backup -> getPrettyRelativeTime(backup.getLastModified()));
+  }
 
   void tryCreateBackup(File dumpFile) {
     // https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_PutObject_section.html
@@ -129,5 +133,34 @@ public class BackupService {
         .plus(Duration.ofDays(backup.getRetentionPeriod()));
 
     return cleanupDate.isBefore(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+  }
+
+  private String getPrettyRelativeTime(Instant time) {
+    Duration duration = Duration.between(time,
+        LocalDateTime.now().toInstant(ZoneOffset.UTC));
+
+    long years = duration.toDays() / 365;
+    long months = duration.toDays() / 30;
+    long weeks = duration.toDays() / 7;
+    long days = duration.toDays();
+    long hours = duration.toHours();
+    long minutes = duration.toMinutes();
+    long seconds = duration.getSeconds();
+
+    if (years > 0) {
+      return years + " year" + (years > 1 ? "s" : "") + " ago";
+    } else if (months > 0) {
+      return months + " month" + (months > 1 ? "s" : "") + " ago";
+    } else if (days > 0) {
+      return days + " day" + (days > 1 ? "s" : "") + " ago";
+    } else if (weeks > 0) {
+      return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+    } else if (hours > 0) {
+      return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    } else if (minutes > 0) {
+      return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    } else {
+      return seconds + " second" + (seconds > 1 ? "s" : "") + " ago";
+    }
   }
 }
