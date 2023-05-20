@@ -32,7 +32,6 @@ export function getRelativeTimeString(date) {
   );
   const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
-  console.log(deltaSeconds, divisor, Math.floor(deltaSeconds / divisor));
   return rtf.format(-Math.floor(deltaSeconds / divisor), units[unitIndex]);
 }
 
