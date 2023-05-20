@@ -2,8 +2,7 @@ s3:
   endpoint: ${DB_BACKUP_ENDPOINT_URL}
   access-key: ${DB_BACKUP_ACCESS_KEY_ID}
   secret-key: ${DB_BACKUP_SECRET_ACCESS_KEY}
-  bucket: kubetools-backups
-  # bucket: ${DB_BACKUP_BUCKET}
+  bucket: ${DB_BACKUP_BUCKET}
 
 postgres:
   connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}

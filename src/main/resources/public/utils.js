@@ -16,7 +16,7 @@ export async function fetchJSON(url, options) {
 
 export function getRelativeTimeString(date) {
   const timeMs = date.getTime();
-  const deltaSeconds = Math.round((timeMs - Date.now()) / 1000);
+  const deltaSeconds = Math.round((Date.now() - timeMs) / 1000);
   const cutoffs = [
     60,
     3600,
@@ -32,7 +32,8 @@ export function getRelativeTimeString(date) {
   );
   const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
-  return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
+  console.log(deltaSeconds, divisor, Math.floor(deltaSeconds / divisor));
+  return rtf.format(-Math.floor(deltaSeconds / divisor), units[unitIndex]);
 }
 
 export function formatSize(size) {

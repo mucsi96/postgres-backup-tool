@@ -11,6 +11,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -139,28 +140,18 @@ public class BackupService {
     Duration duration = Duration.between(time,
         LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
-    long years = duration.toDays() / 365;
-    long months = duration.toDays() / 30;
-    long weeks = duration.toDays() / 7;
-    long days = duration.toDays();
-    long hours = duration.toHours();
-    long minutes = duration.toMinutes();
-    long seconds = duration.getSeconds();
+    long deltaSeconds = duration.getSeconds();
+    long[] cutoffs = { 60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365 };
+    String[] units = { "second", "minute", "hour", "day", "week", "month",
+        "year" };
+        int unitIndex = IntStream.range(0, cutoffs.length)
+        .filter(index -> cutoffs[index] > deltaSeconds).findFirst()
+        .orElse(units.length - 1);
+    long divisor = unitIndex != 0 ? cutoffs[unitIndex - 1] : 1;    
+    long value = Math.floorDiv(deltaSeconds, divisor);
+    String unit = units[unitIndex];
 
-    if (years > 0) {
-      return years + " year" + (years > 1 ? "s" : "") + " ago";
-    } else if (months > 0) {
-      return months + " month" + (months > 1 ? "s" : "") + " ago";
-    } else if (days > 0) {
-      return days + " day" + (days > 1 ? "s" : "") + " ago";
-    } else if (weeks > 0) {
-      return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
-    } else if (hours > 0) {
-      return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
-    } else if (minutes > 0) {
-      return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
-    } else {
-      return seconds + " second" + (seconds > 1 ? "s" : "") + " ago";
-    }
+    return value == 1 ? value + " " + unit + " ago"
+        : value + " " + unit + "s ago";
   }
 }
