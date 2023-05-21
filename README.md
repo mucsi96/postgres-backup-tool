@@ -4,7 +4,7 @@ Simple PostgreSQL backup tool to S3 bucket with UI
 ![PostgreSQL backup tool screenshot](docs/postrgress-backup-tool-1.png)
 
 Stack:
-- Java 11
+- Java 17
 - Spring Boot 3
 - Web Components
 - Lit 2.x
