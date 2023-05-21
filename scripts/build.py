@@ -19,7 +19,7 @@ build_and_push_server_img(
     image_name='mucsi96/postgres-backup-tool',
     docker_username=docker_username,
     docker_password=docker_password,
-    github_access_token=github_access_token
+    github_access_token=github_access_token,
     pack_args=[
         '--buildpack', 'fagiani/apt@0.2.5',
     ]
