@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import sys
-from kubetools.docker_utils import build_and_push_server_img
+from kubetools.docker_utils import build_and_push_docker_img
 
 root_directory = Path(__file__).parent.parent
 github_access_token = sys.argv[1]
