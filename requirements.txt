@@ -1,0 +1,1 @@
+https://github.com/mucsi96/kubetools/releases/download/python-lib-27/kubetools-0.27.0-py3-none-any.whl
