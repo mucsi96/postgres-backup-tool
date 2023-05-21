@@ -13,14 +13,11 @@ if not github_access_token:
     print('GitHub access token is missing', flush=True, file=sys.stderr)
     exit(1)
 
-build_and_push_server_img(
+build_and_push_docker_img(
     src=root_directory,
     tag_prefix='server',
     image_name='mucsi96/postgres-backup-tool',
     docker_username=docker_username,
     docker_password=docker_password,
-    github_access_token=github_access_token,
-    pack_args=[
-        '--buildpack', 'fagiani/apt@0.2.5',
-    ]
+    github_access_token=github_access_token
 )

@@ -23,5 +23,4 @@ jobs:
           cache: "pip" # caching pip dependencies
       - run: pip install -r requirements.txt
 
-      - uses: buildpacks/github-actions/setup-pack@v5.1.0
       - run: python scripts/build.py ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_HUB_USERNAME }} ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
