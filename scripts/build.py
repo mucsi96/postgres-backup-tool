@@ -14,7 +14,7 @@ if not github_access_token:
     exit(1)
 
 build_and_push_server_img(
-    src=root_directory / 'src',
+    src=root_directory,
     tag_prefix='server',
     image_name='mucsi96/postgres-backup-tool',
     docker_username=docker_username,
