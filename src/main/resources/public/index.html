@@ -11,12 +11,20 @@
       }
 
       body {
-        background-color: hsl(222, 47%, 11%)
+        background-color: hsl(222, 47%, 11%);
       }
     </style>
-    <script type="module" src="/app.js"></script>
   </head>
   <body>
+    <script type="module">
+      const cookies = Object.fromEntries(
+        decodeURIComponent(document.cookie)
+          .split(";")
+          .map((cookie) => cookie.split("="))
+      );
+      window.appBasePath = cookies["base-path"];
+      import(window.appBasePath + "/app.js");
+    </script>
     <app-body></app-body>
   </body>
 </html>

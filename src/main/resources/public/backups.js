@@ -95,7 +95,7 @@ class AppBackups extends LitElement {
 
   #restore() {
     this.processing = true;
-    fetchJSON(`/restore/${this.selectedBackup}`, { method: "POST" })
+    fetchJSON(`./restore/${this.selectedBackup}`, { method: "POST" })
       .then(() => this.dispatchEvent(new BackupRestoredEvent()))
       .catch((err) =>
         this.dispatchEvent(new AppErrorEvent("Unable to create backup", err))

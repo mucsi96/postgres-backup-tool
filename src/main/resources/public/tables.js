@@ -113,7 +113,7 @@ class AppTables extends LitElement {
 
   #backup(retentionPeriod) {
     this.processing = true;
-    fetchJSON(`/backup?retention_period=${retentionPeriod}`, { method: "POST" })
+    fetchJSON(`./backup?retention_period=${retentionPeriod}`, { method: "POST" })
       .then(() => this.dispatchEvent(new BackupCreatedEvent()))
       .catch((err) =>
         this.dispatchEvent(new AppErrorEvent("Unable to create backup", err))

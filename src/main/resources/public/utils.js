@@ -1,5 +1,5 @@
 export async function fetchJSON(url, options) {
-  const response = await fetch(url, options);
+  const response = await fetch(window.appBasePath + url, options);
 
   if (!response.ok) {
     throw new Error("Fetch error");
