@@ -7,8 +7,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
 import io.github.mucsi96.postgresbackuptool.model.Database;
@@ -17,12 +20,28 @@ import io.github.mucsi96.postgresbackuptool.model.Table;
 @Service
 public class DatabaseService {
   private final JdbcTemplate jdbcTemplate;
+  private final String databaseName;
+  private final String restoreDatabaseName;
   private final String connectionString;
+  private final String restoreConnectionString;
+  private final String rootDatasourceUrl;
+  private final String datasourceUsername;
+  private final String datasourcePassword;
 
   public DatabaseService(JdbcTemplate jdbcTemplate,
-      @Value("${postgres.connection-string}") String connectionString) {
+      @Value("${postgres.database-name}") String databaseName,
+      @Value("${postgres.connection-string}") String connectionString,
+      @Value("${postgres.root-url}") String restoreDatasourceUrl,
+      @Value("${spring.datasource.username}") String datasourceUsername,
+      @Value("${spring.datasource.password}") String datasourcePassword) {
     this.jdbcTemplate = jdbcTemplate;
+    this.databaseName = databaseName;
+    this.restoreDatabaseName = databaseName + "_restore";
     this.connectionString = connectionString;
+    this.restoreConnectionString = connectionString + "_restore";
+    this.rootDatasourceUrl = restoreDatasourceUrl;
+    this.datasourceUsername = datasourceUsername;
+    this.datasourcePassword = datasourcePassword;
   }
 
   public Database getDatabaseInfo() {
@@ -62,10 +81,36 @@ public class DatabaseService {
 
   public void restoreDump(File dumpFile)
       throws IOException, InterruptedException {
-    Process process = new ProcessBuilder("pg_restore", "--clean", "--create",
-        "--dbname", connectionString, "--verbose", dumpFile.getName())
-            .inheritIO().start();
+    DataSource dataSource = new DriverManagerDataSource(rootDatasourceUrl,
+        datasourceUsername, datasourcePassword);
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+    System.out.println("Preparig restore db");
+
+    jdbcTemplate.execute(
+        String.format("DROP DATABASE IF EXISTS \"%s\";", restoreDatabaseName));
+    jdbcTemplate
+        .execute(String.format("CREATE DATABASE \"%s\";", restoreDatabaseName));
+
+    System.out.println("Restore db prepared");
+
+    Process process = new ProcessBuilder("pg_restore", "--dbname",
+        restoreConnectionString, "--verbose", dumpFile.getName()).inheritIO()
+            .start();
     process.waitFor();
+
+    System.out.println("Restore complete");
+
+    jdbcTemplate.execute(String.format(
+        "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '%s' AND pid <> pg_backend_pid();",
+        databaseName));
+    jdbcTemplate.execute(
+        String.format("DROP DATABASE IF EXISTS \"%s\";", databaseName));
+    jdbcTemplate
+        .execute(String.format("ALTER DATABASE \"%s\" RENAME TO \"%s\";",
+            restoreDatabaseName, databaseName));
+
+    System.out.println("Switch complete");
   }
 
   private int getTableRowCount(String tableName) {

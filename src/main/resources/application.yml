@@ -5,6 +5,9 @@ s3:
   bucket: ${DB_BACKUP_BUCKET}
 
 postgres:
+  database-name: ${POSTGRES_DB}
+  username: ${POSTGRES_USER}
+  root-url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/postgres
   connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
 
 spring:

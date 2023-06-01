@@ -23,5 +23,20 @@
     "name": "postgres.connection-string",
     "type": "java.lang.String",
     "description": "Connection string for pg_dump"
+  },
+  {
+    "name": "postgres.database-name",
+    "type": "java.lang.String",
+    "description": "Postgress database name"
+  },
+  {
+    "name": "postgres.username",
+    "type": "java.lang.String",
+    "description": "Postgress user name"
+  },
+  {
+    "name": "postgres.root-url",
+    "type": "java.lang.String",
+    "description": "Root Postgres url"
   }
 ]}

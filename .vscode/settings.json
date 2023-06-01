@@ -10,5 +10,17 @@
     "[java]": {
         "editor.tabSize": 2
     },
-    "java.format.settings.url": ".vscode/java-formatter.xml"
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "db",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "local",
+            "database": "postgres-backup-tool",
+            "username": "postgres",
+            "password": "postgres"
+        }
+    ]
 }

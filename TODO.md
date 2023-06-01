@@ -1,2 +1,0 @@
-- Create Docker image
-- Add context path to backup app using SERVER_SERVLET_CONTEXT_PATH environment variable from Kubernetes
