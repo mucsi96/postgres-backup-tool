@@ -29,19 +29,12 @@ class AppHeader extends LightDOMLitElement {
       align-items: center;
       justify-content: space-between;
     }
-
-    app-header h1 {
-      font-size: 24px;
-      font-family: system-ui;
-      margin: 0;
-      color: white;
-    }
   `;
 
   render() {
     return html`
       <header>
-        <h1>${this.title}</h1>
+        <app-heading level="1">${this.title}</app-heading>
         ${this.children}
       </header>
     `;
