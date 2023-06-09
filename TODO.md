@@ -1,0 +1,2 @@
+- add possibility to ignore tables
+- add end to end tests https://medium.com/@zvisno/running-selenium-tests-with-docker-a484186cd3d https://www.swtestacademy.com/selenium-spring-boot-cucumber-junit5-project/

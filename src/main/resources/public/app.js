@@ -20,10 +20,11 @@ import {
   SuccessNotificationEvent,
 } from "./components/notifications.js";
 import { fetchJSON } from "./utils.js";
+import { LightDOMLitElement } from "./core.js";
 
-class App extends LitElement {
+class App extends LightDOMLitElement {
   static styles = css`
-    #main {
+    app-body #main {
       margin-top: 32px;
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -87,7 +88,10 @@ class App extends LitElement {
   render() {
     return html`
       <app-header title="Postgres Backup Tool" ]
-        ><app-heading level="3">Last backup <app-badge>${this.lastBackupTime}</app-badge></app-heading></app-header
+        ><app-heading level="3"
+          >Last backup
+          <app-badge>${this.lastBackupTime}</app-badge></app-heading
+        ></app-header
       >
       <app-main>
         <div id="main">

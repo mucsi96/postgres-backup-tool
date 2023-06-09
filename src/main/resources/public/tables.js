@@ -1,16 +1,16 @@
 import {
-  LitElement,
-  html,
   css,
+  html
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { LightDOMLitElement } from "./core.js";
 import {
-  BackupCreatedEvent,
   AppErrorEvent,
+  BackupCreatedEvent,
   CleanupFinishedEvent,
 } from "./events.js";
 import { fetchJSON } from "./utils.js";
 
-class AppTables extends LitElement {
+class AppTables extends LightDOMLitElement {
   static properties = {
     tables: { type: Array },
     "total-count": { type: Number },
@@ -19,14 +19,14 @@ class AppTables extends LitElement {
   };
 
   static styles = css`
-    :host {
+    app-tables {
       display: grid;
       gap: 40px;
     }
 
-    .tables,
-    .backup,
-    .cleanup {
+    app-tables .tables,
+    app-tables .backup,
+    app-tables .cleanup {
       display: grid;
       gap: 20px;
     }

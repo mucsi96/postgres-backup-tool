@@ -5,6 +5,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 import { fetchJSON, formatSize, getRelativeTimeString } from "./utils.js";
 import { BackupRestoredEvent } from "./events.js";
+import { LightDOMLitElement } from "./core.js";
 
 function formatRetention(value) {
   if (!value) {
@@ -18,7 +19,7 @@ function formatRetention(value) {
   return `${value} days`;
 }
 
-class AppBackups extends LitElement {
+class AppBackups extends LightDOMLitElement {
   static properties = {
     backups: { type: Array },
     selectedBackup: { type: String },
@@ -26,7 +27,7 @@ class AppBackups extends LitElement {
   };
 
   static styles = css`
-    :host {
+    app-backups {
       display: grid;
       gap: 20px;
     }

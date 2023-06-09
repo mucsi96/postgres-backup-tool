@@ -1,33 +1,32 @@
 import {
-  LitElement,
-  html,
-  css,
+  css
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { LightDOMLitElement } from "../core.js";
 
-class AppHeading extends LitElement {
+class AppHeading extends LightDOMLitElement {
   static properties = {
     level: { type: Number },
   };
 
   static styles = css`
-    :host {
+    app-heading {
       display: block;
       color: white;
     }
 
-    :host([level="2"]) {
+    app-heading[level="2"] {
       font-size: 21px;
       font-weight: 700;
     }
 
-    :host([level="3"]) {
+    app-heading[level="3"] {
       font-size: 16px;
       font-weight: 700;
     }
   `;
 
   render() {
-    return html`<slot></slot>`;
+    return this.children;
   }
 }
 

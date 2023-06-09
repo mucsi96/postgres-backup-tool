@@ -1,16 +1,16 @@
 import {
-  LitElement,
   html,
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { LightDOMLitElement } from "../core.js";
 
-class AppBadge extends LitElement {
+class AppBadge extends LightDOMLitElement {
   static properties = {
     type: { type: String },
   };
 
   static styles = css`
-    :host {
+    app-badge {
       background-color: white;
       color: rgb(30, 66, 159);
       display: inline-block;
@@ -26,7 +26,7 @@ class AppBadge extends LitElement {
   `;
 
   render() {
-    return html`<slot></slot> `;
+    return this.children;
   }
 }
 
