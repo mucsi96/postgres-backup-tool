@@ -1,0 +1,14 @@
+s3:
+  endpoint: http://s3:9090
+
+postgres:
+  database-name: test-postgres-backup-tool
+  username: ${POSTGRES_USER}
+  root-url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/postgres
+  connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/test-postgres-backup-tool
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/test-postgres-backup-tool
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}

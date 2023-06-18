@@ -22,9 +22,11 @@
     }
   },
   "remoteUser": "vscode",
-  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
-  "postCreateCommand": {
+  "postStartCommand": {
+    "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
     "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
+  },
+  "postCreateCommand": {
   },
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
