@@ -16,6 +16,8 @@ services:
       POSTGRES_DB: postgres-backup-tool
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      TEST_DB_BACKUP_ENDPOINT_URL: http://s3:9090
+      TEST_POSTGRES_DB: test-postgres-backup-tool
     env_file:
       - .env
       

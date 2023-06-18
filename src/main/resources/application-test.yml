@@ -1,14 +1,17 @@
 s3:
-  endpoint: http://s3:9090
+  endpoint: ${TEST_DB_BACKUP_ENDPOINT_URL}
+  access-key: foo
+  secret-key: bar
+  bucket: ${DB_BACKUP_BUCKET}
 
 postgres:
-  database-name: test-postgres-backup-tool
+  database-name: ${TEST_POSTGRES_DB}
   username: ${POSTGRES_USER}
   root-url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/postgres
-  connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/test-postgres-backup-tool
+  connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${TEST_POSTGRES_DB}
 
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/test-postgres-backup-tool
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${TEST_POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
