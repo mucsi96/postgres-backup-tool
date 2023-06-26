@@ -1,14 +1,11 @@
-import {
-  LitElement,
-  html,
-  css,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 import "./notification.js";
 import { NotificationEvent } from "./notification.js";
+import { LightDOMLitElement } from "../core.js";
 
-class Notifications extends LitElement {
+class Notifications extends LightDOMLitElement {
   static styles = css`
-    :host {
+    app-notifications {
       pointer-events: none;
       position: fixed;
       z-index: 100;
@@ -31,18 +28,17 @@ class Notifications extends LitElement {
   }
 
   addNotification(type, text) {
-    const { host } = this.renderRoot;
     const notification = document.createElement("app-notification");
     notification.setAttribute("type", type);
     notification.appendChild(document.createTextNode(text));
     notification.addEventListener("notification-end", () =>
-      this.renderRoot.removeChild(notification)
+      this.removeChild(notification)
     );
-    const heightBefore = host.offsetHeight;
-    this.renderRoot.appendChild(notification);
-    const heightAfter = host.offsetHeight;
+    const heightBefore = this.offsetHeight;
+    this.appendChild(notification);
+    const heightAfter = this.offsetHeight;
     const initialOffset = heightBefore - heightAfter;
-    host.animate(
+    this.animate(
       [
         { transform: `translateY(${initialOffset}px)` },
         { transform: "translateY(0)" },

@@ -2,19 +2,33 @@ package io.github.mucsi96.postgresbackuptool;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.Network;
+import org.testcontainers.containers.PostgreSQLContainer;
+
+import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
@@ -24,11 +38,35 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 
+class MyNetwork implements Network {
+
+  @Override
+  public String getId() {
+    return "postgres-backup-tool_devcontainer_default";
+  }
+
+  @Override
+  public void close() {
+  }
+
+  @Override
+  public Statement apply(Statement base, Description description) {
+    return null;
+  }
+
+};
+
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class BaseIntegrationTest {
+  public static S3MockContainer s3Mock;
+
+  public static PostgreSQLContainer<?> dbMock;
+
   @Autowired
   WebDriver webDriver;
+
+  WebDriverWait wait;
 
   @Autowired
   S3Client s3Client;
@@ -39,13 +77,91 @@ public class BaseIntegrationTest {
   @Value("${s3.bucket}")
   String bucketName;
 
-  // @LocalServerPort
-  // private int port;
+  @LocalServerPort
+  private int port;
+
+  @AfterEach
+  void tearDown() {
+    s3Mock.stop();
+    dbMock.stop();
+  }
 
   @BeforeEach
   public void beforeEach() {
     cleanupS3();
     cleanupDB();
+    wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+    webDriver.get("http://localhost:" + port);
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.tagName("app-header")));
+  }
+
+  @DynamicPropertySource
+  public static void overrideProps(DynamicPropertyRegistry registry) {
+    s3Mock = new S3MockContainer("2.13.0").withNetwork(new MyNetwork());
+
+    s3Mock.start();
+
+    dbMock = new PostgreSQLContainer<>("postgres:15.3-alpine3.18")
+        .withNetwork(new MyNetwork());
+
+    dbMock.start();
+
+    registry.add("s3.endpoint", () -> s3Mock.getHttpEndpoint());
+    registry.add("s3.access-key", () -> "foo");
+    registry.add("s3.secret-key", () -> "bar");
+    registry.add("s3.bucket", () -> "test-bucket");
+    registry.add("postgres.database-name", dbMock::getDatabaseName);
+    registry.add("postgres.username", dbMock::getUsername);
+    registry.add("postgres.root-url",
+        () -> String.format("jdbc:postgresql://%s:%s@%s:%s/postgres",
+            dbMock.getUsername(), dbMock.getPassword(), dbMock.getHost(),
+            dbMock.getFirstMappedPort()));
+    registry.add("postgres.connection-string",
+        () -> String.format("postgresql://%s:%s@%s:%s/%s", dbMock.getUsername(),
+            dbMock.getPassword(), dbMock.getHost(), dbMock.getFirstMappedPort(),
+            dbMock.getDatabaseName()));
+    registry.add("spring.datasource.url", dbMock::getJdbcUrl);
+    registry.add("spring.datasource.username", dbMock::getUsername);
+    registry.add("spring.datasource.password", dbMock::getPassword);
+
+    // registry.add("s3.endpoint", () -> "http://s3:9090");
+    // registry.add("s3.access-key", () -> "foo");
+    // registry.add("s3.secret-key", () -> "bar");
+    // registry.add("s3.bucket", () -> "test-bucket");
+    // registry.add("postgres.database-name", dbMock::getDatabaseName);
+    // registry.add("postgres.username", dbMock::getUsername);
+    // registry.add("postgres.root-url",
+    // () -> String.format("jdbc:postgresql://%s:%s@%s:%s/postgres",
+    // dbMock.getUsername(), dbMock.getPassword(), dbMock.getHost(),
+    // dbMock.getFirstMappedPort()));
+    // registry.add("postgres.connection-string",
+    // () -> String.format("postgresql://%s:%s@%s:%s/%s", dbMock.getUsername(),
+    // dbMock.getPassword(), dbMock.getHost(), dbMock.getFirstMappedPort(),
+    // dbMock.getDatabaseName()));
+    // registry.add("spring.datasource.url", dbMock::getJdbcUrl);
+    // registry.add("spring.datasource.username", dbMock::getUsername);
+    // registry.add("spring.datasource.password", dbMock::getPassword);
+
+    // registry.add("s3.endpoint", () -> "http://s3:9090");
+    // registry.add("s3.access-key", () -> "foo");
+    // registry.add("s3.secret-key", () -> "bar");
+    // registry.add("s3.bucket", () -> "test-bucket");
+    // registry.add("postgres.database-name", dbMock::getDatabaseName);
+    // registry.add("postgres.username", dbMock::getUsername);
+    // registry.add("postgres.root-url",
+    // () -> String.format("jdbc:postgresql://%s:%s@db:%s/postgres",
+    // dbMock.getUsername(), dbMock.getPassword(),
+    // dbMock.getFirstMappedPort()));
+    // registry.add("postgres.connection-string",
+    // () -> String.format("postgresql://%s:%s@db:%s/%s", dbMock.getUsername(),
+    // dbMock.getPassword(), dbMock.getFirstMappedPort(),
+    // dbMock.getDatabaseName()));
+    // registry.add("spring.datasource.url",
+    // () -> String.format("jdbc:postgresql://db:%s/%s",
+    // dbMock.getFirstMappedPort(), dbMock.getDatabaseName()));
+    // registry.add("spring.datasource.username", dbMock::getUsername);
+    // registry.add("spring.datasource.password", dbMock::getPassword);
   }
 
   private void cleanupDB() {
@@ -55,6 +171,18 @@ public class BaseIntegrationTest {
 
     tables.stream().forEach(table -> jdbcTemplate
         .execute(String.format("DROP TABLE \"%s\" cascade;", table)));
+
+    jdbcTemplate.execute("create table fruites (name varchar(20))");
+    jdbcTemplate.execute("insert into fruites (name) values ('Apple')");
+    jdbcTemplate.execute("insert into fruites (name) values ('Orange')");
+    jdbcTemplate.execute("insert into fruites (name) values ('Banana')");
+    jdbcTemplate.execute("insert into fruites (name) values ('Rasberry')");
+    jdbcTemplate.execute("create table vegetables (name varchar(20))");
+    jdbcTemplate.execute("insert into vegetables (name) values ('Carrot')");
+    jdbcTemplate.execute("insert into vegetables (name) values ('Potato')");
+    jdbcTemplate.execute("insert into vegetables (name) values ('Spinach')");
+    jdbcTemplate.execute("insert into vegetables (name) values ('Broccoli')");
+    jdbcTemplate.execute("insert into vegetables (name) values ('Tomato')");
   }
 
   public void takeScreenshot(String name) {

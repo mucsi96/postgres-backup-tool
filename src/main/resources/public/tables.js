@@ -67,7 +67,7 @@ class AppTables extends LightDOMLitElement {
                   (table) => html`
                     <app-tr>
                       <app-td highlighted>${table.name}</app-td>
-                      <app-td>${table.count}</app-td>
+                      <app-td>${table.rowCount}</app-td>
                     </app-tr>
                   `
                 )}
