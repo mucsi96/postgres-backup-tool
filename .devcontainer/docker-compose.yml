@@ -11,6 +11,7 @@ services:
     volumes:
       - ../..:/workspaces:cached
     environment:
+      DOCKER_NETWORK: postgres-backup-tool_devcontainer_default
       POSTGRES_HOSTNAME: db
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres-backup-tool
