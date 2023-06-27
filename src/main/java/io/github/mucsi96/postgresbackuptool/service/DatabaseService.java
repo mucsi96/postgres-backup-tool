@@ -68,13 +68,13 @@ public class DatabaseService {
         .format(LocalDateTime.now());
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
-    Process process = new ProcessBuilder("pg_dump", "--dbname",
-        connectionString, "--format", "c", "--file", filename).inheritIO()
-            .start();
-    int exitCode = process.waitFor();
-    if (exitCode != 0) {
-      throw new RuntimeException("pg_dump returned " + exitCode);
-    }
+
+    System.out.println("Creating dump");
+
+    new ProcessBuilder("pg_dump", "--dbname", connectionString, "--format", "c",
+        "--file", filename).inheritIO().start().waitFor();
+
+    System.out.println("Dump created");
 
     return new File(filename);
   }
@@ -94,10 +94,8 @@ public class DatabaseService {
 
     System.out.println("Restore db prepared");
 
-    Process process = new ProcessBuilder("pg_restore", "--dbname",
-        restoreConnectionString, "--verbose", dumpFile.getName()).inheritIO()
-            .start();
-    process.waitFor();
+    new ProcessBuilder("pg_restore", "--dbname", restoreConnectionString,
+        "--verbose", dumpFile.getName()).inheritIO().start().waitFor();
 
     System.out.println("Restore complete");
 
