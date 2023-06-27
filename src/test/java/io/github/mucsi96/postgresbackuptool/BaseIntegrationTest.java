@@ -2,10 +2,10 @@ package io.github.mucsi96.postgresbackuptool;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +32,18 @@ import org.testcontainers.lifecycle.Startables;
 
 import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
 
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.waiters.S3Waiter;
 
 class DevContainerNetwork implements Network {
 
@@ -112,6 +117,12 @@ public class BaseIntegrationTest {
         .visibilityOfElementLocated(By.tagName("app-header")));
   }
 
+  public void reload() {
+    webDriver.navigate().refresh();
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.tagName("app-header")));
+  }
+
   @DynamicPropertySource
   public static void overrideProps(DynamicPropertyRegistry registry) {
     registry.add("s3.endpoint", () -> s3Mock.getHttpEndpoint());
@@ -162,7 +173,7 @@ public class BaseIntegrationTest {
       if (destFile.exists()) {
         destFile.delete();
       }
-      FileUtils.moveFile(tmpFile, destFile);
+      Files.move(tmpFile.toPath(), destFile.toPath());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -183,5 +194,15 @@ public class BaseIntegrationTest {
           DeleteBucketRequest.builder().bucket(bucketName).build());
     } catch (NoSuchBucketException e) {
     }
+  }
+
+  public void createMockBackup(String name) {
+    s3Client
+        .createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
+    S3Waiter s3Waiter = s3Client.waiter();
+    s3Waiter.waitUntilBucketExists(
+        HeadBucketRequest.builder().bucket(bucketName).build());
+    s3Client.putObject(PutObjectRequest.builder().bucket(bucketName)
+        .key(name).build(), RequestBody.empty());
   }
 }

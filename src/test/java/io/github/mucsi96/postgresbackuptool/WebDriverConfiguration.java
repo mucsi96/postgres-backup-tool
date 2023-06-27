@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 public class WebDriverConfiguration {
   @Bean
   public WebDriver getWebDriver() {
-    ChromeOptions options = new ChromeOptions().addArguments("--disable-gpu",
-        "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080",
-        "--remote-allow-origins=*").setHeadless(true);
+    ChromeOptions options = new ChromeOptions().addArguments("--headless",
+        "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
+        "--window-size=1920,1080", "--remote-allow-origins=*");
 
     ChromeDriver driver = new ChromeDriver(options);
     driver.setLogLevel(Level.WARNING);
