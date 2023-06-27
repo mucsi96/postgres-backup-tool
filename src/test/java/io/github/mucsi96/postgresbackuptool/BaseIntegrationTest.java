@@ -2,13 +2,14 @@ package io.github.mucsi96.postgresbackuptool;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.By;
@@ -65,7 +66,9 @@ class DevContainerNetwork implements Network {
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(ScreenshotOnFailure.class)
 public class BaseIntegrationTest {
+
   static S3MockContainer s3Mock;
 
   static PostgreSQLContainer<?> dbMock;
@@ -173,7 +176,7 @@ public class BaseIntegrationTest {
       if (destFile.exists()) {
         destFile.delete();
       }
-      Files.move(tmpFile.toPath(), destFile.toPath());
+      FileUtils.moveFile(tmpFile, destFile);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -202,7 +205,8 @@ public class BaseIntegrationTest {
     S3Waiter s3Waiter = s3Client.waiter();
     s3Waiter.waitUntilBucketExists(
         HeadBucketRequest.builder().bucket(bucketName).build());
-    s3Client.putObject(PutObjectRequest.builder().bucket(bucketName)
-        .key(name).build(), RequestBody.empty());
+    s3Client.putObject(
+        PutObjectRequest.builder().bucket(bucketName).key(name).build(),
+        RequestBody.empty());
   }
 }
