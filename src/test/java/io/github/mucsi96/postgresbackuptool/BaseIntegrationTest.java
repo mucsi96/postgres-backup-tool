@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +92,10 @@ public class BaseIntegrationTest {
 
   @BeforeAll
   public static void setUp() {
+    if (s3Mock != null) {
+      return;
+    }
+
     s3Mock = new S3MockContainer("2.13.0");
     dbMock = new PostgreSQLContainer<>("postgres:15.3-alpine3.18");
 
@@ -102,12 +106,6 @@ public class BaseIntegrationTest {
     }
 
     Startables.deepStart(List.of(dbMock, s3Mock)).join();
-  }
-
-  @AfterAll
-  public static void tearDown() {
-    s3Mock.stop();
-    dbMock.stop();
   }
 
   @BeforeEach
@@ -121,7 +119,9 @@ public class BaseIntegrationTest {
   }
 
   public void reload() {
+    WebElement header = webDriver.findElement(By.tagName("app-header"));
     webDriver.navigate().refresh();
+    wait.until(ExpectedConditions.stalenessOf(header));
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
   }
