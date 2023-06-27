@@ -74,9 +74,16 @@ public class DatabaseService {
     new ProcessBuilder("pg_dump", "--dbname", connectionString, "--format", "c",
         "--file", filename).inheritIO().start().waitFor();
 
+    File file = new File(filename);
+
+    if (!file.exists()) {
+      throw new RuntimeException(
+          "Unable to create dump. " + file + " was not created.");
+    }
+    
     System.out.println("Dump created");
 
-    return new File(filename);
+    return file;
   }
 
   public void restoreDump(File dumpFile)
