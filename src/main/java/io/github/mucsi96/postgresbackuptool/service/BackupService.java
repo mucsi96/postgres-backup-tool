@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +58,10 @@ public class BackupService {
 
     return response.contents().stream()
         .map(s3Object -> Backup.builder().name(s3Object.key())
-            .lastModified(s3Object.lastModified()).size(s3Object.size())
+            .lastModified(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+                .withZone(ZoneOffset.UTC)
+                .parse(s3Object.key().substring(0, 15), Instant::from))
+            .size(s3Object.size())
             .totalRowCount(getTotalCountFromName(s3Object))
             .retentionPeriod(getRetentionPeriodFromName(s3Object)).build())
         .sorted((a, b) -> b.getLastModified().compareTo(a.getLastModified()))
@@ -133,21 +136,20 @@ public class BackupService {
     Instant cleanupDate = backup.getLastModified()
         .plus(Duration.ofDays(backup.getRetentionPeriod()));
 
-    return cleanupDate.isBefore(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+    return cleanupDate.isBefore(Instant.now());
   }
 
   private String getPrettyRelativeTime(Instant time) {
-    Duration duration = Duration.between(time,
-        LocalDateTime.now().toInstant(ZoneOffset.UTC));
+    Duration duration = Duration.between(time, Instant.now());
 
     long deltaSeconds = duration.getSeconds();
     long[] cutoffs = { 60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365 };
     String[] units = { "second", "minute", "hour", "day", "week", "month",
         "year" };
-        int unitIndex = IntStream.range(0, cutoffs.length)
+    int unitIndex = IntStream.range(0, cutoffs.length)
         .filter(index -> cutoffs[index] > deltaSeconds).findFirst()
         .orElse(units.length - 1);
-    long divisor = unitIndex != 0 ? cutoffs[unitIndex - 1] : 1;    
+    long divisor = unitIndex != 0 ? cutoffs[unitIndex - 1] : 1;
     long value = Math.floorDiv(deltaSeconds, divisor);
     String unit = units[unitIndex];
 

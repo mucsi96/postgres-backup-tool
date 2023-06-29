@@ -2,7 +2,7 @@ package io.github.mucsi96.postgresbackuptool.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class DatabaseService {
   public File createDump(int retentionPeriod)
       throws IOException, InterruptedException {
     String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-        .format(LocalDateTime.now());
+        .format(Instant.now());
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
 

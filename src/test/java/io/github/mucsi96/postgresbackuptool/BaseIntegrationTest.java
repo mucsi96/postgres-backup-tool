@@ -3,6 +3,9 @@ package io.github.mucsi96.postgresbackuptool;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -199,14 +202,19 @@ public class BaseIntegrationTest {
     }
   }
 
-  public void createMockBackup(String name) {
+  public void createMockBackup(Instant time, int rowCount,
+      int retentionPeriod) {
+    String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+        .withZone(ZoneOffset.UTC).format(time);
+    String filename = String.format("%s.%s.%s.pgdump", timeString, rowCount,
+        retentionPeriod);
     s3Client
         .createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
     S3Waiter s3Waiter = s3Client.waiter();
     s3Waiter.waitUntilBucketExists(
         HeadBucketRequest.builder().bucket(bucketName).build());
     s3Client.putObject(
-        PutObjectRequest.builder().bucket(bucketName).key(name).build(),
+        PutObjectRequest.builder().bucket(bucketName).key(filename).build(),
         RequestBody.empty());
   }
 }
