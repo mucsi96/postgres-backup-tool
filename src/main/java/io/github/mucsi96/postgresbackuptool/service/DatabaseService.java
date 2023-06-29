@@ -80,7 +80,7 @@ public class DatabaseService {
       throw new RuntimeException(
           "Unable to create dump. " + file + " was not created.");
     }
-    
+
     System.out.println("Dump created");
 
     return file;
