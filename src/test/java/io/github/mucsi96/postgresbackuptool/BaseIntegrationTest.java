@@ -208,11 +208,17 @@ public class BaseIntegrationTest {
         .withZone(ZoneOffset.UTC).format(time);
     String filename = String.format("%s.%s.%s.pgdump", timeString, rowCount,
         retentionPeriod);
-    s3Client
-        .createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
-    S3Waiter s3Waiter = s3Client.waiter();
-    s3Waiter.waitUntilBucketExists(
-        HeadBucketRequest.builder().bucket(bucketName).build());
+    try {
+      s3Client
+          .headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+    } catch (NoSuchBucketException e) {
+      s3Client.createBucket(
+          CreateBucketRequest.builder().bucket(bucketName).build());
+      S3Waiter s3Waiter = s3Client.waiter();
+      s3Waiter.waitUntilBucketExists(
+          HeadBucketRequest.builder().bucket(bucketName).build());
+    }
+
     s3Client.putObject(
         PutObjectRequest.builder().bucket(bucketName).key(filename).build(),
         RequestBody.empty());
