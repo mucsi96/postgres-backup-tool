@@ -1,5 +1,4 @@
 import {
-  LitElement,
   html,
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
@@ -45,22 +44,24 @@ class AppBackups extends LightDOMLitElement {
         >Backups <app-badge>${this.backups.length}</app-badge></app-heading
       >
       ${this.backups.length
-        ? html`<app-table id="backups">
-            <app-thead>
-              <app-tr>
-                <app-th></app-th>
-                <app-th>Date</app-th>
-                <app-th>Name</app-th>
-                <app-th>Records</app-th>
-                <app-th>Size</app-th>
-                <app-th>Retention</app-th>
-                <app-th>Action</app-th>
-              </app-tr>
-            </app-thead>
-            <app-tbody>
-              ${this.backups.map((backup) => this.#renderBackup(backup))}
-            </app-tbody>
-          </app-table>`
+        ? html`<app-table id="backups"
+            ><table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>Records</th>
+                  <th>Size</th>
+                  <th>Retention</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${this.backups.map((backup) => this.#renderBackup(backup))}
+              </tbody>
+            </table></app-table
+          >`
         : ""}
     `;
   }
@@ -69,28 +70,31 @@ class AppBackups extends LightDOMLitElement {
     const actionsDisabled =
       backup.name !== this.selectedBackup || this.processing;
     return html`
-      <app-tr
-        selectable
-        ?selected=${backup.name === this.selectedBackup}
+      <tr
         @click=${() => {
           this.selectedBackup = backup.name;
         }}
       >
-        <app-td highlighted no-wrap
-          >${getRelativeTimeString(new Date(backup.lastModified))}</app-td
-        >
-        <app-td no-wrap>${backup.name}</app-td>
-        <app-td>${backup.totalRowCount}</app-td>
-        <app-td no-wrap>${formatSize(backup.size)}</app-td>
-        <app-td>${formatRetention(backup.retentionPeriod)}</app-td>
-        <app-td>
+        <td>
+          <app-table-selector
+            ?selected=${backup.name === this.selectedBackup}
+          ></app-table-selector>
+        </td>
+        <td highlighted no-wrap>
+          ${getRelativeTimeString(new Date(backup.lastModified))}
+        </td>
+        <td no-wrap>${backup.name}</td>
+        <td>${backup.totalRowCount}</td>
+        <td no-wrap>${formatSize(backup.size)}</td>
+        <td>${formatRetention(backup.retentionPeriod)}</td>
+        <td>
           <app-button
             ?disabled=${actionsDisabled}
             @click=${actionsDisabled ? undefined : () => this.#restore()}
             >Restore</app-button
           >
-        </app-td>
-      </app-tr>
+        </td>
+      </tr>
     `;
   }
 

@@ -1,6 +1,6 @@
 import {
   css,
-  html
+  html,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 import { LightDOMLitElement } from "./core.js";
 import {
@@ -55,24 +55,26 @@ class AppTables extends LightDOMLitElement {
           >Tables <app-badge>${this.tables.length}</app-badge></app-heading
         >
         ${this.tables.length
-          ? html`<app-table>
-              <app-thead>
-                <app-tr>
-                  <app-th>Name</app-th>
-                  <app-th>Records</app-th>
-                </app-tr>
-              </app-thead>
-              <app-tbody>
-                ${this.tables.map(
-                  (table) => html`
-                    <app-tr>
-                      <app-td highlighted>${table.name}</app-td>
-                      <app-td>${table.rowCount}</app-td>
-                    </app-tr>
-                  `
-                )}
-              </app-tbody>
-            </app-table>`
+          ? html`<app-table
+              ><table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Records</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${this.tables.map(
+                    (table) => html`
+                      <tr>
+                        <td highlighted>${table.name}</td>
+                        <td>${table.rowCount}</td>
+                      </tr>
+                    `
+                  )}
+                </tbody>
+              </table></app-table
+            >`
           : ""}
       </div>
       <div class="backup">
