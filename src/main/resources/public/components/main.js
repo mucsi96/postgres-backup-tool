@@ -7,7 +7,7 @@ import { LightDOMLitElement } from "../core.js";
 
 class AppMain extends LightDOMLitElement {
   static styles = css`
-    app-main {
+    & {
       display: block;
       background-color: hsl(222, 47%, 11%);
       color: hsl(218, 11%, 65%);
@@ -15,8 +15,8 @@ class AppMain extends LightDOMLitElement {
       font-size: 14px;
       padding: 1px 0;
     }
-    
-    app-main main {
+
+    & main {
       padding: 0 1rem;
       max-width: 90rem;
       margin: 0 auto;

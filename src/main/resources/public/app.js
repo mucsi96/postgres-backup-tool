@@ -24,7 +24,7 @@ import { LightDOMLitElement } from "./core.js";
 
 class App extends LightDOMLitElement {
   static styles = css`
-    app-body #main {
+    #main {
       margin-top: 32px;
       display: grid;
       grid-template-columns: 1fr 1fr;

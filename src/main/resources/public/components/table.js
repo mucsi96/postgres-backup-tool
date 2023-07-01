@@ -7,12 +7,12 @@ import { LightDOMLitElement } from "../core.js";
 
 class AppTable extends LightDOMLitElement {
   static styles = css`
-    app-table table {
+    & table {
       border-collapse: collapse;
       text-align: left;
     }
 
-    app-table th {
+    & th {
       padding: 12px 24px;
       font-weight: 600;
       background-color: hsl(217, 19%, 27%);
@@ -20,43 +20,43 @@ class AppTable extends LightDOMLitElement {
       text-transform: uppercase;
     }
 
-    app-table tr {
+    & tr {
       font-weight: 500;
       background-color: hsl(215, 28%, 17%);
       transition: background-color 0.3s;
     }
 
-    app-table tr:has(app-table-selector) {
+    & tr:has(app-table-selector) {
       cursor: pointer;
     }
 
-    app-table tr:has(app-table-selector):hover {
+    & tr:has(app-table-selector):hover {
       background-color: hsl(217, 19%, 27%);
     }
 
-    app-table tr:has(app-table-selector[selected]) {
+    & tr:has(app-table-selector[selected]) {
       background-color: hsl(215, 44%, 28%);
       color: hsl(218, 11%, 65%);
     }
 
-    app-table tr:has(app-table-selector[selected]):hover {
+    & tr:has(app-table-selector[selected]):hover {
       background-color: hsl(215, 44%, 28%);
     }
 
-    app-table td {
+    & td {
       padding: 12px 24px;
       border-bottom: 1px solid hsl(217, 19%, 27%);
     }
 
-    app-table td[highlighted] {
+    & td[highlighted] {
       color: white;
     }
 
-    app-table td[no-wrap] {
+    & td[no-wrap] {
       white-space: nowrap;
     }
 
-    app-table td:has(app-table-selector) {
+    & td:has(app-table-selector) {
       padding: 12px;
       vertical-align: middle;
     }

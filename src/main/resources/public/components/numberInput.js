@@ -1,8 +1,8 @@
 import {
-  LitElement,
   html,
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { LightDOMLitElement } from "../core.js";
 
 export class ValueChangeEvent extends Event {
   constructor(value) {
@@ -11,8 +11,9 @@ export class ValueChangeEvent extends Event {
   }
 }
 
-class NumberInput extends LitElement {
+class NumberInput extends LightDOMLitElement {
   static properties = {
+    label: { type: String },
     value: { type: String },
     min: { type: Number },
     max: { type: Number },
@@ -20,11 +21,11 @@ class NumberInput extends LitElement {
   };
 
   static styles = css`
-    :host {
+    & {
       display: inline;
     }
 
-    label {
+    & label {
       display: flex;
       gap: 8px;
       flex-direction: column;
@@ -34,7 +35,7 @@ class NumberInput extends LitElement {
       font-weight: 500;
     }
 
-    input {
+    & input {
       background-color: hsl(217, 19%, 27%);
       border: 1px solid hsl(215, 14%, 34%);
       color: white;
@@ -45,31 +46,32 @@ class NumberInput extends LitElement {
       outline: none;
     }
 
-    input:focus {
+    & input:focus {
       border: 1px solid hsl(218, 93%, 61%);
       box-shadow: hsl(218, 93%, 61%) 0 0 0 1px;
     }
 
-    input:invalid {
+    & input:invalid {
       border: 1px solid hsl(0, 96%, 77%);
       box-shadow: hsl(0, 96%, 77%) 0 0 0 1px;
     }
 
-    input::-webkit-inner-spin-button {
+    & input::-webkit-inner-spin-button {
       opacity: 0 !important;
     }
   `;
 
   render() {
     return html`<label
-      ><slot></slot>
+      >${this.label}
       <input
         type="number"
         value=${this.value}
         min=${this.min}
         max=${this.max}
         step=${this.step}
-        @change=${(event) => this.dispatchEvent(new ValueChangeEvent(event.target.value))}
+        @change=${(event) =>
+          this.dispatchEvent(new ValueChangeEvent(event.target.value))}
     /></label>`;
   }
 }

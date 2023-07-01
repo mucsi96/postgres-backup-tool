@@ -26,7 +26,7 @@ class AppBackups extends LightDOMLitElement {
   };
 
   static styles = css`
-    app-backups {
+    & {
       display: grid;
       gap: 20px;
     }

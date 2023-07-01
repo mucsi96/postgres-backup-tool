@@ -5,7 +5,7 @@ import { LightDOMLitElement } from "../core.js";
 
 class Notifications extends LightDOMLitElement {
   static styles = css`
-    app-notifications {
+    & {
       pointer-events: none;
       position: fixed;
       z-index: 100;

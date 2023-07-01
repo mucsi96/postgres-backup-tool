@@ -7,7 +7,7 @@ export class LightDOMLitElement extends LitElement {
     }
 
     const style = document.createElement("style");
-    style.innerHTML = this.constructor.elementStyles;
+    style.innerHTML = `${this.tagName} {${this.constructor.elementStyles}}`;
     style.setAttribute("data-tagname", this.tagName);
     document.head.append(style);
     return this;

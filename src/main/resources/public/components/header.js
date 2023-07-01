@@ -10,7 +10,7 @@ class AppHeader extends LightDOMLitElement {
   };
 
   static styles = css`
-    app-header {
+    & {
       display: block;
       background-color: hsl(215, 28%, 17%);
       border-bottom: 1px solid hsl(215, 14%, 34%);
@@ -21,7 +21,7 @@ class AppHeader extends LightDOMLitElement {
       font-size: 14px;
     }
 
-    app-header header {
+    & header {
       padding: 18px 1rem 19px;
       max-width: 90rem;
       margin: 0 auto;

@@ -19,14 +19,14 @@ class AppTables extends LightDOMLitElement {
   };
 
   static styles = css`
-    app-tables {
+    & {
       display: grid;
       gap: 40px;
     }
 
-    app-tables .tables,
-    app-tables .backup,
-    app-tables .cleanup {
+    .tables,
+    .backup,
+    .cleanup {
       display: grid;
       gap: 20px;
     }
@@ -80,6 +80,7 @@ class AppTables extends LightDOMLitElement {
       <div class="backup">
         <app-heading level="2">Backup</app-heading>
         <app-number-input
+          label="Retention period (days)"
           value=${this["retention-period"]}
           min="1"
           max="356"
@@ -87,7 +88,7 @@ class AppTables extends LightDOMLitElement {
           @value-change=${(event) => {
             this["retention-period"] = event.details;
           }}
-          >Retention period (days)</app-number-input
+          ></app-number-input
         >
         <section>
           <app-button
