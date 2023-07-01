@@ -104,8 +104,8 @@ public class BackupTest extends BaseIntegrationTest {
   @Test
   public void creates_backup_with_retention() {
     setupMocks();
-    WebElement retentionPeriodInput = webDriver.findElement(By.xpath(
-        "//label[contains(text(), \"Retention period\")]/input"));
+    WebElement retentionPeriodInput = webDriver.findElement(
+        By.xpath("//label[contains(text(), \"Retention period\")]/input"));
 
     retentionPeriodInput.sendKeys(Keys.chord(Keys.CONTROL, "A"), "7");
 
@@ -113,12 +113,8 @@ public class BackupTest extends BaseIntegrationTest {
         .findElement(By.xpath("//app-button[contains(text(), \"Backup\")]"))
         .click();
 
-    takeScreenshot("1");
-
     wait.until(ExpectedConditions.visibilityOfElementLocated(
         By.xpath("//app-notification[contains(text(), \"Backup created\")]")));
-
-    takeScreenshot("2");
 
     List<BackupRow> backups = getBackups();
 
@@ -127,5 +123,38 @@ public class BackupTest extends BaseIntegrationTest {
     assertThat(backups.get(0).getDate()).isEqualTo("1 second ago");
     assertThat(backups.get(0).getRecords()).isEqualTo(9);
     assertThat(backups.get(0).getRetention()).isEqualTo(7);
+  }
+
+  @Test
+  public void cleans_up_outdated_backups() {
+    setupMocks(() -> {
+      createMockBackup(Instant.now().minus(Period.ofDays(30)), 1, 31);
+      createMockBackup(Instant.now().minus(Period.ofDays(7)), 2, 7);
+      createMockBackup(Instant.now().minus(Period.ofDays(1)), 3, 1);
+      createMockBackup(Instant.now().minus(Period.ofDays(1)), 4, 2);
+    });
+
+    webDriver
+        .findElement(By.xpath("//app-button[contains(text(), \"Cleanup\")]"))
+        .click();
+
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By
+        .xpath("//app-notification[contains(text(), \"Cleanup finished\")]")));
+
+    takeScreenshot("1");
+
+    List<BackupRow> backups = getBackups();
+
+    assertThat(backups.size()).isEqualTo(2);
+
+    assertThat(backups.get(0).getDate()).isEqualTo("yesterday");
+    assertThat(backups.get(0).getRecords()).isEqualTo(4);
+    assertThat(backups.get(0).getSize()).isEqualTo("0.0 B");
+    assertThat(backups.get(0).getRetention()).isEqualTo(2);
+
+    assertThat(backups.get(1).getDate()).isEqualTo("last month");
+    assertThat(backups.get(1).getRecords()).isEqualTo(1);
+    assertThat(backups.get(1).getSize()).isEqualTo("0.0 B");
+    assertThat(backups.get(1).getRetention()).isEqualTo(31);
   }
 }
