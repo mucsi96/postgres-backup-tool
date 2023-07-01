@@ -20,6 +20,11 @@
     "description": "S3 secretKey"
   },
   {
+    "name": "s3.region",
+    "type": "java.lang.String",
+    "description": "S3 AWS region"
+  },
+  {
     "name": "postgres.connection-string",
     "type": "java.lang.String",
     "description": "Connection string for pg_dump"
@@ -38,5 +43,5 @@
     "name": "postgres.root-url",
     "type": "java.lang.String",
     "description": "Root Postgres url"
-  }
+  },
 ]}

@@ -21,9 +21,10 @@ public class BackupConfiguration {
   @Bean
   public S3Client s3Client(@Value("${s3.endpoint}") String endpointUrl,
       @Value("${s3.access-key}") String accessKeyValue,
-      @Value("${s3.secret-key}") String secretKeyValue)
+      @Value("${s3.secret-key}") String secretKeyValue,
+      @Value("${s3.region}") String region)
       throws URISyntaxException {
-    return S3Client.builder().region(Region.US_EAST_1)
+    return S3Client.builder().region(Region.of(region))
         .credentialsProvider(StaticCredentialsProvider
             .create(AwsBasicCredentials.create(accessKeyValue, secretKeyValue)))
         .serviceConfiguration(

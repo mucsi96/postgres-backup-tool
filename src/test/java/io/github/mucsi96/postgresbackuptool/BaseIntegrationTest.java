@@ -144,6 +144,7 @@ public class BaseIntegrationTest {
     registry.add("s3.access-key", () -> "foo");
     registry.add("s3.secret-key", () -> "bar");
     registry.add("s3.bucket", () -> "test-bucket");
+    registry.add("s3.region", () -> "test-region");
     registry.add("postgres.database-name", dbMock::getDatabaseName);
     registry.add("postgres.username", dbMock::getUsername);
     registry.add("postgres.root-url",
