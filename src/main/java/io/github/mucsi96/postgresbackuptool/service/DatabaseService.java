@@ -27,13 +27,15 @@ public class DatabaseService {
   private final String rootDatasourceUrl;
   private final String datasourceUsername;
   private final String datasourcePassword;
+  private final DateTimeFormatter dateTimeFormatter;
 
   public DatabaseService(JdbcTemplate jdbcTemplate,
       @Value("${postgres.database-name}") String databaseName,
       @Value("${postgres.connection-string}") String connectionString,
       @Value("${postgres.root-url}") String restoreDatasourceUrl,
       @Value("${spring.datasource.username}") String datasourceUsername,
-      @Value("${spring.datasource.password}") String datasourcePassword) {
+      @Value("${spring.datasource.password}") String datasourcePassword,
+      DateTimeFormatter dateTimeFormatter) {
     this.jdbcTemplate = jdbcTemplate;
     this.databaseName = databaseName;
     this.restoreDatabaseName = databaseName + "_restore";
@@ -42,6 +44,7 @@ public class DatabaseService {
     this.rootDatasourceUrl = restoreDatasourceUrl;
     this.datasourceUsername = datasourceUsername;
     this.datasourcePassword = datasourcePassword;
+    this.dateTimeFormatter = dateTimeFormatter;
   }
 
   public Database getDatabaseInfo() {
@@ -64,8 +67,7 @@ public class DatabaseService {
 
   public File createDump(int retentionPeriod)
       throws IOException, InterruptedException {
-    String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-        .format(Instant.now());
+    String timeString = dateTimeFormatter.format(Instant.now());
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
 

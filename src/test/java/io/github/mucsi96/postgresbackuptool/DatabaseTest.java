@@ -2,14 +2,20 @@ package io.github.mucsi96.postgresbackuptool;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import io.github.mucsi96.postgresbackuptool.model.TableRow;
+import io.github.mucsi96.postgresbackuptool.utils.TableUtils;
 
 public class DatabaseTest extends BaseIntegrationTest {
 
   @Test
   public void shows_total_record_count_in_db() {
+    setupMocks();
     WebElement element = webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Records\")]"));
     assertThat(element.getText()).isEqualTo("Records 9");
@@ -17,6 +23,7 @@ public class DatabaseTest extends BaseIntegrationTest {
 
   @Test
   public void shows_total_table_count_in_db() {
+    setupMocks();
     WebElement element = webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"));
     assertThat(element.getText()).isEqualTo("Tables 2");
@@ -24,11 +31,19 @@ public class DatabaseTest extends BaseIntegrationTest {
 
   @Test
   public void shows_tables_and_record_count_in_db() {
+    setupMocks();
     WebElement table = webDriver.findElement(By.xpath(
         "//app-heading[contains(text(), \"Tables\")]/following-sibling::app-table"));
 
-    assertThat(table.getText().split("\\s+")).isEqualTo(
-        new String[] { "Name", "Records", "fruites", "4", "vegetables", "5" });
+    List<TableRow> tables = getDatabaseTables();
 
+    assertThat(TableUtils.getHeaders(table)).isEqualTo(List.of("NAME", "RECORDS"));
+
+    assertThat(tables.size()).isEqualTo(2);
+
+    assertThat(tables.get(0).getName()).isEqualTo("fruites");
+    assertThat(tables.get(0).getRows()).isEqualTo(4);
+    assertThat(tables.get(1).getName()).isEqualTo("vegetables");
+    assertThat(tables.get(1).getRows()).isEqualTo(5);
   }
 }

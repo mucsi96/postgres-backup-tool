@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -36,6 +34,9 @@ import org.testcontainers.lifecycle.Startables;
 
 import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
 
+import io.github.mucsi96.postgresbackuptool.model.BackupRow;
+import io.github.mucsi96.postgresbackuptool.model.TableRow;
+import io.github.mucsi96.postgresbackuptool.utils.TableUtils;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
@@ -87,6 +88,9 @@ public class BaseIntegrationTest {
   @Autowired
   JdbcTemplate jdbcTemplate;
 
+  @Autowired
+  DateTimeFormatter dateTimeFormatter;
+
   @Value("${s3.bucket}")
   String bucketName;
 
@@ -111,23 +115,28 @@ public class BaseIntegrationTest {
     Startables.deepStart(List.of(dbMock, s3Mock)).join();
   }
 
-  @BeforeEach
-  public void beforeEach() {
+  public void setupMocks(Runnable prepare) {
     cleanupS3();
     cleanupDB();
+    prepare.run();
     wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     webDriver.get("http://localhost:" + port);
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
   }
 
-  public void reload() {
-    WebElement header = webDriver.findElement(By.tagName("app-header"));
-    webDriver.navigate().refresh();
-    wait.until(ExpectedConditions.stalenessOf(header));
-    wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("app-header")));
+  public void setupMocks() {
+    setupMocks(() -> {
+    });
   }
+
+  // public void reload() {
+  // WebElement header = webDriver.findElement(By.tagName("app-header"));
+  // webDriver.navigate().refresh();
+  // wait.until(ExpectedConditions.stalenessOf(header));
+  // wait.until(ExpectedConditions
+  // .visibilityOfElementLocated(By.tagName("app-header")));
+  // }
 
   @DynamicPropertySource
   public static void overrideProps(DynamicPropertyRegistry registry) {
@@ -204,8 +213,7 @@ public class BaseIntegrationTest {
 
   public void createMockBackup(Instant time, int rowCount,
       int retentionPeriod) {
-    String timeString = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-        .withZone(ZoneOffset.UTC).format(time);
+    String timeString = dateTimeFormatter.format(time);
     String filename = String.format("%s.%s.%s.pgdump", timeString, rowCount,
         retentionPeriod);
     try {
@@ -222,5 +230,26 @@ public class BaseIntegrationTest {
     s3Client.putObject(
         PutObjectRequest.builder().bucket(bucketName).key(filename).build(),
         RequestBody.empty());
+  }
+
+  public List<BackupRow> getBackups() {
+    WebElement table = webDriver.findElement(By.xpath(
+        "//app-heading[contains(text(), \"Backups\")]/following-sibling::app-table"));
+    return TableUtils.getRows(table,
+        cells -> BackupRow.builder().date(cells.get(1).getText())
+            .name(cells.get(2).getText())
+            .records(Integer.parseInt(cells.get(3).getText()))
+            .size(cells.get(4).getText())
+            .retention(Integer.parseInt(cells.get(5).getText().split(" ")[0]))
+            .build());
+  }
+
+  public List<TableRow> getDatabaseTables() {
+    WebElement table = webDriver.findElement(By.xpath(
+        "//app-heading[contains(text(), \"Tables\")]/following-sibling::app-table"));
+
+    return TableUtils.getRows(table,
+        cells -> TableRow.builder().name(cells.get(0).getText())
+            .rows(Integer.parseInt(cells.get(1).getText())).build());
   }
 }

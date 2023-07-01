@@ -34,3 +34,7 @@ Required environment variables:
 
 - https://flowbite.com/docs/components/tables/
 - https://hslpicker.com/
+
+### Selenium
+
+- https://github.com/selenium-webdriver-book/source

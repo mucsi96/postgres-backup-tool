@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -38,11 +37,13 @@ import software.amazon.awssdk.services.s3.waiters.S3Waiter;
 public class BackupService {
   private final S3Client s3Client;
   private final String bucketName;
+  private final DateTimeFormatter dateTimeFormatter;
 
   public BackupService(S3Client s3Client,
-      @Value("${s3.bucket}") String bucketName) {
+      @Value("${s3.bucket}") String bucketName, DateTimeFormatter dateTimeFormatter) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
+    this.dateTimeFormatter = dateTimeFormatter;
   }
 
   public List<Backup> getBackups() {
@@ -58,8 +59,7 @@ public class BackupService {
 
     return response.contents().stream()
         .map(s3Object -> Backup.builder().name(s3Object.key())
-            .lastModified(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-                .withZone(ZoneOffset.UTC)
+            .lastModified(dateTimeFormatter
                 .parse(s3Object.key().substring(0, 15), Instant::from))
             .size(s3Object.size())
             .totalRowCount(getTotalCountFromName(s3Object))
