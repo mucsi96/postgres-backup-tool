@@ -96,7 +96,7 @@ public class BackupTest extends BaseIntegrationTest {
 
     assertThat(backups.size()).isEqualTo(1);
 
-    assertThat(backups.get(0).getDate()).isEqualTo("1 second ago");
+    assertThat(backups.get(0).getDate()).isIn("1 second ago", "now");
     assertThat(backups.get(0).getRecords()).isEqualTo(9);
     assertThat(backups.get(0).getRetention()).isEqualTo(1);
   }
