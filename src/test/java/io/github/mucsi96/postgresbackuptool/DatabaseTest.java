@@ -65,6 +65,7 @@ public class DatabaseTest extends BaseIntegrationTest {
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
         .getText()).isEqualTo("Tables 0");
+
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Records\")]"))
         .getText()).isEqualTo("Records 0");

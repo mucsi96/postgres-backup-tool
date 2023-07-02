@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -121,7 +122,9 @@ public class BaseIntegrationTest {
     cleanupDB();
     initDB();
     prepare.run();
-    reload();
+    webDriver.get("http://localhost:" + port);
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.tagName("app-header")));
   }
 
   public void setupMocks() {
@@ -130,7 +133,8 @@ public class BaseIntegrationTest {
   }
 
   public void reload() {
-    webDriver.get("http://localhost:" + port);
+    ((JavascriptExecutor) webDriver)
+        .executeScript("document.body.innerHTML = '';location.reload();");
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
   }
