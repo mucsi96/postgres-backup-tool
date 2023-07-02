@@ -83,12 +83,12 @@ public class DatabaseTest extends BaseIntegrationTest {
         .findElement(By.xpath("//app-button[contains(text(), \"Restore\")]"))
         .click();
 
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//app-notification[contains(text(), \"Backup restored\")]")));
+
     wait.until(ExpectedConditions
         .refreshed(ExpectedConditions.visibilityOfElementLocated(
             By.xpath("//app-heading[contains(text(), \"Tables\")]"))));
-
-    wait.until(ExpectedConditions.visibilityOfElementLocated(
-        By.xpath("//app-notification[contains(text(), \"Backup restored\")]")));
 
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
