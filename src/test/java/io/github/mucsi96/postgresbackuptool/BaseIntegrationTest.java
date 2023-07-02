@@ -147,6 +147,8 @@ public class BaseIntegrationTest {
         () -> String.format("postgresql://%s:%s@%s:%s/%s", dbMock.getUsername(),
             dbMock.getPassword(), dbMock.getHost(), dbMock.getFirstMappedPort(),
             dbMock.getDatabaseName()));
+    registry.add("spring.datasource.type",
+        () -> "org.springframework.jdbc.datasource.SimpleDriverDataSource");
     registry.add("spring.datasource.url", dbMock::getJdbcUrl);
     registry.add("spring.datasource.username", dbMock::getUsername);
     registry.add("spring.datasource.password", dbMock::getPassword);
