@@ -60,7 +60,11 @@ public class DatabaseTest extends BaseIntegrationTest {
         By.xpath("//app-notification[contains(text(), \"Backup created\")]")));
 
     cleanupDB();
-    reload();
+    webDriver.navigate().refresh();
+
+    wait.until(ExpectedConditions
+        .refreshed(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//app-heading[contains(text(), \"Tables\")]"))));
 
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
@@ -79,12 +83,17 @@ public class DatabaseTest extends BaseIntegrationTest {
         .findElement(By.xpath("//app-button[contains(text(), \"Restore\")]"))
         .click();
 
+    wait.until(ExpectedConditions
+        .refreshed(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//app-heading[contains(text(), \"Tables\")]"))));
+
     wait.until(ExpectedConditions.visibilityOfElementLocated(
         By.xpath("//app-notification[contains(text(), \"Backup restored\")]")));
 
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
         .getText()).isEqualTo("Tables 2");
+
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Records\")]"))
         .getText()).isEqualTo("Records 9");

@@ -132,13 +132,6 @@ public class BaseIntegrationTest {
     });
   }
 
-  public void reload() {
-    ((JavascriptExecutor) webDriver)
-        .executeScript("document.body.innerHTML = '';location.reload();");
-    wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("app-header")));
-  }
-
   @DynamicPropertySource
   public static void overrideProps(DynamicPropertyRegistry registry) {
     registry.add("s3.endpoint", () -> s3Mock.getHttpEndpoint());
