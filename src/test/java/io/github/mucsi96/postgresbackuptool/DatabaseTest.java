@@ -90,6 +90,9 @@ public class DatabaseTest extends BaseIntegrationTest {
         .refreshed(ExpectedConditions.visibilityOfElementLocated(
             By.xpath("//app-heading[contains(text(), \"Tables\")]"))));
 
+    wait.until(ExpectedConditions.textToBe(
+        By.xpath("//app-heading[contains(text(), \"Tables\")]"), "Tables 2"));
+
     assertThat(webDriver
         .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
         .getText()).isEqualTo("Tables 2");
