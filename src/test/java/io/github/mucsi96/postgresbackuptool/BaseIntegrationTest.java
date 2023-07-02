@@ -116,13 +116,12 @@ public class BaseIntegrationTest {
   }
 
   public void setupMocks(Runnable prepare) {
+    wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     cleanupS3();
     cleanupDB();
+    initDB();
     prepare.run();
-    wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
-    webDriver.get("http://localhost:" + port);
-    wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("app-header")));
+    reload();
   }
 
   public void setupMocks() {
@@ -130,13 +129,11 @@ public class BaseIntegrationTest {
     });
   }
 
-  // public void reload() {
-  // WebElement header = webDriver.findElement(By.tagName("app-header"));
-  // webDriver.navigate().refresh();
-  // wait.until(ExpectedConditions.stalenessOf(header));
-  // wait.until(ExpectedConditions
-  // .visibilityOfElementLocated(By.tagName("app-header")));
-  // }
+  public void reload() {
+    webDriver.get("http://localhost:" + port);
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.tagName("app-header")));
+  }
 
   @DynamicPropertySource
   public static void overrideProps(DynamicPropertyRegistry registry) {
@@ -148,9 +145,8 @@ public class BaseIntegrationTest {
     registry.add("postgres.database-name", dbMock::getDatabaseName);
     registry.add("postgres.username", dbMock::getUsername);
     registry.add("postgres.root-url",
-        () -> String.format("jdbc:postgresql://%s:%s@%s:%s/postgres",
-            dbMock.getUsername(), dbMock.getPassword(), dbMock.getHost(),
-            dbMock.getFirstMappedPort()));
+        () -> String.format("jdbc:postgresql://%s:%s/postgres",
+            dbMock.getHost(), dbMock.getFirstMappedPort()));
     registry.add("postgres.connection-string",
         () -> String.format("postgresql://%s:%s@%s:%s/%s", dbMock.getUsername(),
             dbMock.getPassword(), dbMock.getHost(), dbMock.getFirstMappedPort(),
@@ -160,14 +156,16 @@ public class BaseIntegrationTest {
     registry.add("spring.datasource.password", dbMock::getPassword);
   }
 
-  private void cleanupDB() {
+  public void cleanupDB() {
     List<String> tables = jdbcTemplate.queryForList(
         "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'")
         .stream().map(table -> (String) table.get("table_name")).toList();
 
     tables.stream().forEach(table -> jdbcTemplate
         .execute(String.format("DROP TABLE \"%s\" cascade;", table)));
+  }
 
+  public void initDB() {
     jdbcTemplate.execute("create table fruites (name varchar(20))");
     jdbcTemplate.execute("insert into fruites (name) values ('Apple')");
     jdbcTemplate.execute("insert into fruites (name) values ('Orange')");
@@ -179,6 +177,7 @@ public class BaseIntegrationTest {
     jdbcTemplate.execute("insert into vegetables (name) values ('Spinach')");
     jdbcTemplate.execute("insert into vegetables (name) values ('Broccoli')");
     jdbcTemplate.execute("insert into vegetables (name) values ('Tomato')");
+
   }
 
   public void takeScreenshot(String name) {

@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import io.github.mucsi96.postgresbackuptool.model.TableRow;
 import io.github.mucsi96.postgresbackuptool.utils.TableUtils;
@@ -37,7 +38,8 @@ public class DatabaseTest extends BaseIntegrationTest {
 
     List<TableRow> tables = getDatabaseTables();
 
-    assertThat(TableUtils.getHeaders(table)).isEqualTo(List.of("NAME", "RECORDS"));
+    assertThat(TableUtils.getHeaders(table))
+        .isEqualTo(List.of("NAME", "RECORDS"));
 
     assertThat(tables.size()).isEqualTo(2);
 
@@ -45,5 +47,45 @@ public class DatabaseTest extends BaseIntegrationTest {
     assertThat(tables.get(0).getRows()).isEqualTo(4);
     assertThat(tables.get(1).getName()).isEqualTo("vegetables");
     assertThat(tables.get(1).getRows()).isEqualTo(5);
+  }
+
+  @Test
+  public void restores_backup() {
+    setupMocks();
+    webDriver
+        .findElement(By.xpath("//app-button[contains(text(), \"Backup\")]"))
+        .click();
+
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//app-notification[contains(text(), \"Backup created\")]")));
+
+    cleanupDB();
+    reload();
+
+    assertThat(webDriver
+        .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
+        .getText()).isEqualTo("Tables 0");
+    assertThat(webDriver
+        .findElement(By.xpath("//app-heading[contains(text(), \"Records\")]"))
+        .getText()).isEqualTo("Records 0");
+
+    WebElement backupsTable = webDriver.findElement(By.xpath(
+        "//app-heading[contains(text(), \"Backups\")]/following-sibling::app-table"));
+
+    backupsTable.findElement(By.xpath("//td[contains(text(), \"1 day\")]"))
+        .click();
+    webDriver
+        .findElement(By.xpath("//app-button[contains(text(), \"Restore\")]"))
+        .click();
+
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//app-notification[contains(text(), \"Backup restored\")]")));
+
+    assertThat(webDriver
+        .findElement(By.xpath("//app-heading[contains(text(), \"Tables\")]"))
+        .getText()).isEqualTo("Tables 2");
+    assertThat(webDriver
+        .findElement(By.xpath("//app-heading[contains(text(), \"Records\")]"))
+        .getText()).isEqualTo("Records 9");
   }
 }
