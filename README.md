@@ -9,6 +9,7 @@ Features:
 - Create backups with retention period
 - Cleanup expired backups
 - Restore backups
+- Can be used without UI as REST API. For example using a cronjob and curl
 - Fully covered with E2E Selenium tests
 
 Tested with Cloudflare R2 Object Storage
