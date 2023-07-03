@@ -11,6 +11,7 @@ Features:
 - Restore backups
 - Can be used without UI as REST API. For example using a cronjob and curl
 - Fully covered with E2E Selenium tests
+- Compatible with PostgreSQL 15
 
 Tested with Cloudflare R2 Object Storage
 
