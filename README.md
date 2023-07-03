@@ -1,7 +1,17 @@
 # postgres-backup-tool
-Simple PostgreSQL backup tool to S3 bucket with UI
+Simple PostgreSQL backup tool to S3 Object Storage with UI
 
 ![PostgreSQL backup tool screenshot](docs/postrgress-backup-tool-1.png)
+
+Features:
+- List tables and records of actual database
+- Show last backup time
+- Create backups with retention period
+- Cleanup expired backups
+- Restore backups
+- Fully covered with E2E Selenium tests
+
+Tested with Cloudflare R2 Object Storage
 
 Stack:
 - Java 17
