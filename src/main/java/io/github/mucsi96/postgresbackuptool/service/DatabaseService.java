@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
@@ -23,6 +25,7 @@ public class DatabaseService {
   private final String databaseName;
   private final String restoreDatabaseName;
   private final String connectionString;
+  private final List<String> excludeTables;
   private final String restoreConnectionString;
   private final String rootDatasourceUrl;
   private final String datasourceUsername;
@@ -32,6 +35,7 @@ public class DatabaseService {
   public DatabaseService(JdbcTemplate jdbcTemplate,
       @Value("${postgres.database-name}") String databaseName,
       @Value("${postgres.connection-string}") String connectionString,
+      @Value("${postgres.exclude-tables}") String excludeTables,
       @Value("${postgres.root-url}") String restoreDatasourceUrl,
       @Value("${spring.datasource.username}") String datasourceUsername,
       @Value("${spring.datasource.password}") String datasourcePassword,
@@ -40,6 +44,8 @@ public class DatabaseService {
     this.databaseName = databaseName;
     this.restoreDatabaseName = databaseName + "_restore";
     this.connectionString = connectionString;
+    this.excludeTables = Arrays.asList(excludeTables.split(",")).stream()
+        .map(name -> name.trim()).filter(name -> name.length() > 0).toList();
     this.restoreConnectionString = connectionString + "_restore";
     this.rootDatasourceUrl = restoreDatasourceUrl;
     this.datasourceUsername = datasourceUsername;
@@ -51,11 +57,13 @@ public class DatabaseService {
     List<Map<String, Object>> result = jdbcTemplate.queryForList(
         "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
 
-    List<Table> tables = result.stream().map(table -> {
-      String tableName = (String) table.get("table_name");
-      return Table.builder().name(tableName)
-          .rowCount(getTableRowCount(tableName)).build();
-    }).toList();
+    List<Table> tables = result.stream()
+        .filter(table -> !excludeTables.contains(table.get("table_name")))
+        .map(table -> {
+          String tableName = (String) table.get("table_name");
+          return Table.builder().name(tableName)
+              .rowCount(getTableRowCount(tableName)).build();
+        }).toList();
 
     int totalRowCount = tables.stream().reduce(0,
         (acc, table) -> acc + table.getRowCount(), (a, b) -> a + b);
@@ -70,11 +78,17 @@ public class DatabaseService {
     String timeString = dateTimeFormatter.format(Instant.now());
     String filename = String.format("%s.%s.%s.pgdump", timeString,
         getDatabaseInfo().getTotalRowCount(), retentionPeriod);
+    List<String> commands = Stream.of(
+        List.of("pg_dump", "--dbname", connectionString, "--format", "c",
+            "--file", filename),
+        excludeTables.stream()
+            .flatMap(table -> List.of("--exclude-table", table).stream())
+            .toList())
+        .flatMap(x -> x.stream()).toList();
 
-    System.out.println("Creating dump");
+    System.out.println("Creating dump: " + String.join(", ", commands));
 
-    new ProcessBuilder("pg_dump", "--dbname", connectionString, "--format", "c",
-        "--file", filename).inheritIO().start().waitFor();
+    new ProcessBuilder(commands).inheritIO().start().waitFor();
 
     File file = new File(filename);
 

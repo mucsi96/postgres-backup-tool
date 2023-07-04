@@ -44,4 +44,9 @@
     "type": "java.lang.String",
     "description": "Root Postgres url"
   },
+  {
+    "name": "postgres.exclude-tables",
+    "type": "java.lang.String",
+    "description": "Comma-separated list of tables to exclude during backup"
+  }
 ]}

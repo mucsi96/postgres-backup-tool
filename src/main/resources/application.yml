@@ -10,6 +10,7 @@ postgres:
   username: ${POSTGRES_USER}
   root-url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/postgres
   connection-string: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
+  exclude-tables: ${EXCLUDE_TABLES:""}
 
 spring:
   datasource:

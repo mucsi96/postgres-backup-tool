@@ -147,6 +147,7 @@ public class BaseIntegrationTest {
         () -> String.format("postgresql://%s:%s@%s:%s/%s", dbMock.getUsername(),
             dbMock.getPassword(), dbMock.getHost(), dbMock.getFirstMappedPort(),
             dbMock.getDatabaseName()));
+    registry.add("postgres.exclude-tables", () -> "passwords, secrets");
     registry.add("spring.datasource.type",
         () -> "org.springframework.jdbc.datasource.SimpleDriverDataSource");
     registry.add("spring.datasource.url", dbMock::getJdbcUrl);
@@ -175,7 +176,15 @@ public class BaseIntegrationTest {
     jdbcTemplate.execute("insert into vegetables (name) values ('Spinach')");
     jdbcTemplate.execute("insert into vegetables (name) values ('Broccoli')");
     jdbcTemplate.execute("insert into vegetables (name) values ('Tomato')");
-
+    jdbcTemplate.execute("create table passwords (name varchar(20))");
+    jdbcTemplate.execute("insert into passwords (name) values ('123')");
+    jdbcTemplate.execute("insert into passwords (name) values ('123456')");
+    jdbcTemplate.execute("insert into passwords (name) values ('abc')");
+    jdbcTemplate.execute("insert into passwords (name) values ('abcd')");
+    jdbcTemplate.execute("create table secrets (name varchar(20))");
+    jdbcTemplate.execute("insert into secrets (name) values ('a')");
+    jdbcTemplate.execute("insert into secrets (name) values ('b')");
+    jdbcTemplate.execute("insert into secrets (name) values ('c')");
   }
 
   public void takeScreenshot(String name) {

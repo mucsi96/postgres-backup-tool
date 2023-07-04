@@ -1,1 +1,0 @@
-- add possibility to ignore tables

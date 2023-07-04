@@ -35,6 +35,10 @@ Required environment variables:
 - `POSTGRES_PASSWORD`
 - `SPRING_ACTUATOR_PORT`
 
+Optional environment variables:
+
+- `EXCLUDE_TABLES` - Comma-separated list of tables to exclude during backup
+
 ## Resources
 
 - https://github.com/kananindzya/hello-world-aws-sdk-r2/blob/master/src/main/java/com/example/aws/api/r2/App.java

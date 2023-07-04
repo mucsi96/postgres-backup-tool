@@ -141,8 +141,6 @@ public class BackupTest extends BaseIntegrationTest {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By
         .xpath("//app-notification[contains(text(), \"Cleanup finished\")]")));
 
-    takeScreenshot("1");
-
     List<BackupRow> backups = getBackups();
 
     assertThat(backups.size()).isEqualTo(2);
