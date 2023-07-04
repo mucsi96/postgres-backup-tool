@@ -9,6 +9,7 @@ Features:
 - Create backups with retention period
 - Cleanup expired backups
 - Restore backups
+- Exclude tables from backup
 - Can be used without UI as REST API. For example using a cronjob and curl
 - Fully covered with E2E Selenium tests
 - Compatible with PostgreSQL 15
