@@ -3,7 +3,7 @@ Simple PostgreSQL backup tool to S3 Object Storage with UI
 
 ![PostgreSQL backup tool screenshot](docs/postrgress-backup-tool-1.png)
 
-Features:
+## Features:
 - List tables and records of actual database
 - Show last backup time
 - Create backups with retention period
@@ -13,17 +13,16 @@ Features:
 - Can be used without UI as REST API. For example using a cronjob and curl
 - Fully covered with E2E Selenium tests
 - Compatible with PostgreSQL 15
+- Tested with Cloudflare R2 Object Storage
 
-Tested with Cloudflare R2 Object Storage
-
-Stack:
+## Stack:
 - Java 17
 - Spring Boot 3
 - Web Components
 - Lit 2.x
 - Java AWS SDK 2.x 
 
-Required environment variables:
+## Required environment variables:
 - `AWS_S3_ENDPOINT_URL`
 - `AWS_S3_ACCESS_KEY_ID`
 - `AWS_S3_SECRET_ACCESS_KEY`
@@ -36,7 +35,7 @@ Required environment variables:
 - `POSTGRES_PASSWORD`
 - `SPRING_ACTUATOR_PORT`
 
-Optional environment variables:
+## Optional environment variables:
 
 - `EXCLUDE_TABLES` - Comma-separated list of tables to exclude during backup
 
