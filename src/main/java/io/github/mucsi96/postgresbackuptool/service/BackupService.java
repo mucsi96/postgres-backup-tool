@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -113,9 +112,9 @@ public class BackupService {
         .delete(Delete.builder().objects(backupsToCleanup).build()).build());
   }
 
-  public Optional<String> getLastBackupSecondsAgo() {
+  public Optional<Instant> getLastBackupTime() {
     return getBackups().stream().findFirst()
-        .map(backup -> getPrettyRelativeTime(backup.getLastModified()));
+        .map(backup -> backup.getLastModified());
   }
 
   void tryCreateBackup(File dumpFile) {
@@ -137,23 +136,5 @@ public class BackupService {
         .plus(Duration.ofDays(backup.getRetentionPeriod()));
 
     return cleanupDate.isBefore(Instant.now());
-  }
-
-  private String getPrettyRelativeTime(Instant time) {
-    Duration duration = Duration.between(time, Instant.now());
-
-    long deltaSeconds = duration.getSeconds();
-    long[] cutoffs = { 60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365 };
-    String[] units = { "second", "minute", "hour", "day", "week", "month",
-        "year" };
-    int unitIndex = IntStream.range(0, cutoffs.length)
-        .filter(index -> cutoffs[index] > deltaSeconds).findFirst()
-        .orElse(units.length - 1);
-    long divisor = unitIndex != 0 ? cutoffs[unitIndex - 1] : 1;
-    long value = Math.floorDiv(deltaSeconds, divisor);
-    String unit = units[unitIndex];
-
-    return value == 1 ? value + " " + unit + " ago"
-        : value + " " + unit + "s ago";
   }
 }

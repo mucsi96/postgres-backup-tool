@@ -43,7 +43,7 @@ public class BackupTest extends BaseIntegrationTest {
         By.xpath("//app-heading[contains(text(), \"Last backup\")]"));
 
     assertThat(lastBackupAfter.getText().split("\\s+"))
-        .isEqualTo(new String[] { "Last", "backup", "1", "week", "ago" });
+        .isEqualTo(new String[] { "Last", "backup", "last", "week" });
   }
 
   @Test

@@ -19,7 +19,7 @@ import {
   ErrorNotificationEvent,
   SuccessNotificationEvent,
 } from "./components/notifications.js";
-import { fetchJSON } from "./utils.js";
+import { fetchJSON, getRelativeTimeString } from "./utils.js";
 import { LightDOMLitElement } from "./core.js";
 
 class App extends LightDOMLitElement {
@@ -70,7 +70,15 @@ class App extends LightDOMLitElement {
 
   async #fetchLastBackupTime() {
     try {
-      this.lastBackupTime = await fetchJSON("/last-backup-time");
+      const lastBackupTime = new Date(await fetchJSON("/last-backup-time"));
+      if (
+        lastBackupTime.getTime() +
+          1 /*d*/ * 24 /*h*/ * 60 /*m*/ * 60 /*s*/ * 1000 /*ms*/ <
+        Date.now()
+      ) {
+        this.dispatchEvent(new AppErrorEvent("No backup since one day"));
+      }
+      this.lastBackupTime = getRelativeTimeString(lastBackupTime);
     } catch (err) {
       this.lastBackupTime = "";
       this.dispatchEvent(
