@@ -47,6 +47,17 @@ public class BackupTest extends BaseIntegrationTest {
   }
 
   @Test
+  public void shows_no_last_backup_time_if_there_is_no_backup() {
+    setupMocks();
+
+    WebElement lastBackupAfter = webDriver.findElement(
+        By.xpath("//app-heading[contains(text(), \"Last backup\")]"));
+
+    assertThat(lastBackupAfter.getText().split("\\s+"))
+        .isEqualTo(new String[] { "Last", "backup", "-" });
+  }
+
+  @Test
   public void shows_backups() {
     setupMocks(() -> {
       createMockBackup(Instant.ofEpochSecond(1685596163), 1, 30);

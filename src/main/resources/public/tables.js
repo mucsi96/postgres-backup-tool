@@ -13,9 +13,10 @@ import { fetchJSON } from "./utils.js";
 class AppTables extends LightDOMLitElement {
   static properties = {
     tables: { type: Array },
-    "total-count": { type: Number },
+    totalCount: { type: Number },
     processing: { type: Boolean },
-    "retention-period": { type: Number },
+    retentionPeriod: { type: Number },
+    exportValue: { type: String },
   };
 
   static styles = css`
@@ -26,7 +27,8 @@ class AppTables extends LightDOMLitElement {
 
     .tables,
     .backup,
-    .cleanup {
+    .cleanup,
+    .export {
       display: grid;
       gap: 20px;
     }
@@ -34,7 +36,7 @@ class AppTables extends LightDOMLitElement {
 
   constructor() {
     super();
-    this["retention-period"] = 1;
+    this.retentionPeriod = 1;
   }
 
   render() {
@@ -48,7 +50,7 @@ class AppTables extends LightDOMLitElement {
 
     return html`
       <app-heading level="2"
-        >Records <app-badge>${this["total-count"]}</app-badge></app-heading
+        >Records <app-badge>${this.totalCount}</app-badge></app-heading
       >
       <div class="tables">
         <app-heading level="2"
@@ -81,21 +83,20 @@ class AppTables extends LightDOMLitElement {
         <app-heading level="2">Backup</app-heading>
         <app-number-input
           label="Retention period (days)"
-          value=${this["retention-period"]}
+          value=${this.retentionPeriod}
           min="1"
           max="356"
           step="1"
           @value-change=${(event) => {
-            this["retention-period"] = event.details;
+            this.retentionPeriod = event.details;
           }}
-          ></app-number-input
-        >
+        ></app-number-input>
         <section>
           <app-button
             ?disabled=${actionsDisabled}
             @click="${actionsDisabled
               ? undefined
-              : () => this.#backup(this["retention-period"])}"
+              : () => this.#backup(this.retentionPeriod)}"
             >Backup</app-button
           >
         </section>
@@ -109,6 +110,17 @@ class AppTables extends LightDOMLitElement {
             @click="${actionsDisabled ? undefined : () => this.#cleanup()}"
             >Cleanup</app-button
           >
+        </section>
+      </div>
+      <div class="export">
+        <app-heading level="2">Export</app-heading>
+        <section>
+          <app-button
+            ?disabled=${actionsDisabled}
+            @click="${actionsDisabled ? undefined : () => this.#export()}"
+            >Export</app-button
+          >
+          <dialog id="export-dialog"><textarea cols="100" rows="40">${this.exportValue}</textarea></dialog>
         </section>
       </div>
     `;
@@ -132,6 +144,20 @@ class AppTables extends LightDOMLitElement {
       .then(() => this.dispatchEvent(new CleanupFinishedEvent()))
       .catch((err) =>
         this.dispatchEvent(new AppErrorEvent("Unable to cleanup", err))
+      )
+      .finally(() => {
+        this.processing = false;
+      });
+  }
+
+  #export() {
+    fetchJSON("/export", { method: "GET" })
+      .then(value => {
+        this.exportValue = value
+        this.querySelector('#export-dialog').showModal();
+      })
+      .catch((err) =>
+        this.dispatchEvent(new AppErrorEvent("Unable to get export", err))
       )
       .finally(() => {
         this.processing = false;

@@ -10,7 +10,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import io.github.mucsi96.postgresbackuptool.model.Table;
 import io.github.mucsi96.postgresbackuptool.model.TableRow;
 import io.github.mucsi96.postgresbackuptool.utils.TableUtils;
 

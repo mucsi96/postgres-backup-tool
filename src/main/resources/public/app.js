@@ -70,7 +70,14 @@ class App extends LightDOMLitElement {
 
   async #fetchLastBackupTime() {
     try {
-      const lastBackupTime = new Date(await fetchJSON("/last-backup-time"));
+      const response = await fetchJSON("/last-backup-time");
+
+      if (!response) {
+        this.lastBackupTime = "-";
+        return
+      }
+
+      const lastBackupTime = new Date(response);
       if (
         lastBackupTime.getTime() +
           1 /*d*/ * 24 /*h*/ * 60 /*m*/ * 60 /*s*/ * 1000 /*ms*/ <
@@ -80,7 +87,7 @@ class App extends LightDOMLitElement {
       }
       this.lastBackupTime = getRelativeTimeString(lastBackupTime);
     } catch (err) {
-      this.lastBackupTime = "";
+      this.lastBackupTime = "-";
       this.dispatchEvent(
         new AppErrorEvent("Unable to fetch last backup time", err)
       );
