@@ -2,7 +2,6 @@ package io.github.mucsi96.postgresbackuptool.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -141,38 +139,5 @@ public class DatabaseService {
         .queryForObject("SELECT COUNT(*) FROM " + tableName, Integer.class);
 
     return count != null ? count : 0;
-  }
-
-  public String createExport()
-      throws IOException, InterruptedException {
-    String timeString = dateTimeFormatter.format(Instant.now());
-    String filename = String.format("%s.%s.sql", timeString,
-        getDatabaseInfo().getTotalRowCount());
-    List<String> commands = Stream.of(
-        List.of("pg_dump", "--dbname", connectionString, "--column-inserts",
-            "--file", filename),
-        excludeTables.stream()
-            .flatMap(table -> List.of("--exclude-table", table).stream())
-            .toList())
-        .flatMap(x -> x.stream()).toList();
-
-    System.out.println("Creating dump: " + String.join(", ", commands));
-
-    new ProcessBuilder(commands).inheritIO().start().waitFor();
-
-    File file = new File(filename);
-
-    if (!file.exists()) {
-      throw new RuntimeException(
-          "Unable to create dump. " + file + " was not created.");
-    }
-
-    System.out.println("Export created");
-
-    String export = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-
-    FileUtils.delete(file);
-
-    return export;
   }
 }
