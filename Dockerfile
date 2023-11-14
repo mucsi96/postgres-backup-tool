@@ -1,14 +1,14 @@
-FROM maven:3.9-eclipse-temurin-17 as build
+FROM maven:3-eclipse-temurin-17 as build
 
 WORKDIR /workspace/app
 
 COPY pom.xml .
 COPY src src
 
-RUN mvn install -DskipTests
+RUN mvn package -DskipTests -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM eclipse-temurin:17-jdk-alpine
+FROM bellsoft/liberica-openjre-alpine-musl:17
 
 VOLUME /tmp
 
