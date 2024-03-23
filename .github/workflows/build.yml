@@ -28,6 +28,8 @@ jobs:
 
   build-images:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - test
     steps:
@@ -41,4 +43,4 @@ jobs:
           cache: "pip"
       - run: pip install -r requirements.txt
 
-      - run: python scripts/build_docker_image.py ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} ${{ secrets.ANSIBLE_VAULT_KEY }}
+      - run: python scripts/build_docker_image.py ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ANSIBLE_VAULT_KEY }}
