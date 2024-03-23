@@ -105,20 +105,20 @@ public class DatabaseService {
   public void restoreDump(File dumpFile)
       throws IOException, InterruptedException {
     DataSource dataSource = new DriverManagerDataSource(rootDatasourceUrl,
-        datasourceUsername, datasourcePassword);
+      datasourceUsername, datasourcePassword);
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
     System.out.println("Preparig restore db");
 
     jdbcTemplate.execute(
-        String.format("DROP DATABASE IF EXISTS \"%s\";", restoreDatabaseName));
+      String.format("DROP DATABASE IF EXISTS \"%s\";", restoreDatabaseName));
     jdbcTemplate
-        .execute(String.format("CREATE DATABASE \"%s\";", restoreDatabaseName));
+      .execute(String.format("CREATE DATABASE \"%s\";", restoreDatabaseName));
 
     System.out.println("Restore db prepared");
 
     new ProcessBuilder("pg_restore", "--dbname", restoreConnectionString,
-        "--verbose", dumpFile.getName()).inheritIO().start().waitFor();
+      "--verbose", dumpFile.getName()).inheritIO().start().waitFor();
 
     System.out.println("Restore complete");
 

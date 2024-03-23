@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "shell",
+      "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "Encrypt vault",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ansible-vault decrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "Decrypt vault",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ansible-vault view vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "view vault",
+      "problemMatcher": []
+    }
+	]
+}
