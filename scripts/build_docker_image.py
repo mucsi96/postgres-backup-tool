@@ -14,9 +14,9 @@ if username == None:
     exit(1)
 
 docker_utils.build_and_push_docker_img(
-    src=root_directory / 'src',
-    tag_prefix="docker-image",
-    image_name="publish-tools-test",
+    src=root_directory,
+    tag_prefix="server",
+    image_name="postgres-backup-tool",
     docker_username=username,
     docker_password=secrets['docker_password'],
     github_access_token=sys.argv[1]
