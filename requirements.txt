@@ -1,2 +1,1 @@
-requests == 2.28.2
-https://github.com/mucsi96/kubetools/releases/download/python-lib-35/kubetools-0.35.0-py3-none-any.whl
+https://github.com/mucsi96/publish-tools/releases/download/version-9/publish_tools-9.0.0-py2.py3-none-any.whl

@@ -5,6 +5,18 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    // https://containers.dev/features
+    // https://github.com/devcontainers/features
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "installMaven": true
+    },
+    "ghcr.io/robbert229/devcontainer-features/postgresql-client:1": {
+      "version": "15"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -17,7 +29,8 @@
         "vscjava.vscode-spring-initializr",
         "mtxr.sqltools",
         "mtxr.sqltools-driver-pg",
-        "runem.lit-plugin"
+        "runem.lit-plugin",
+        "GitHub.copilot"
       ]
     }
   },
@@ -27,6 +40,7 @@
     "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
   },
   "postCreateCommand": {
+    "pip-install": "pip install -r requirements.txt"
   },
   "mounts": [
     "source=/var/run/docker.sock.raw,target=/var/run/docker.sock,type=bind"
