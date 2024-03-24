@@ -66,15 +66,20 @@ class App extends LightDOMLitElement {
 
   async #fetchLastBackupTime() {
     try {
-      const lastBackupTime = new Date(await fetchJSON("/last-backup-time"));
+      const lastBackupResponse = await (
+        await fetch("/last-backup-time")
+      ).json();
+
+      const lastBackupTime = lastBackupResponse && new Date(lastBackupResponse);
       if (
+        !lastBackupTime ||
         lastBackupTime.getTime() +
           1 /*d*/ * 24 /*h*/ * 60 /*m*/ * 60 /*s*/ * 1000 /*ms*/ <
-        Date.now()
+          Date.now()
       ) {
         this.dispatchEvent(new AppErrorEvent("No backup since one day"));
       }
-      this.lastBackupTime = getRelativeTimeString(lastBackupTime);
+      this.lastBackupTime = lastBackupTime && getRelativeTimeString(lastBackupTime);
     } catch (err) {
       this.lastBackupTime = "";
       this.dispatchEvent(

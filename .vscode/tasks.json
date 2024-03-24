@@ -3,28 +3,52 @@
   "tasks": [
     {
       "type": "shell",
+      "label": "Build client",
       "command": "npm run build",
+      "isBackground": true,
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "label": "Build client",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Build server",
+      "command": "mvn clean install -DskipTests",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Start server",
+      "command": "mvn spring-boot:run",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
       "problemMatcher": []
     },
     {
       "type": "shell",
       "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "isBackground": true,
       "label": "Encrypt vault",
       "problemMatcher": []
     },
     {
       "type": "shell",
       "command": "ansible-vault decrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "isBackground": true,
       "label": "Decrypt vault",
       "problemMatcher": []
     },
     {
       "type": "shell",
       "command": "ansible-vault view vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "isBackground": true,
       "label": "view vault",
       "problemMatcher": []
     }

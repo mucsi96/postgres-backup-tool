@@ -78,7 +78,9 @@ class AppBackups extends LightDOMLitElement {
           ></app-table-selector>
         </td>
         <td highlighted no-wrap>
-          ${getRelativeTimeString(new Date(backup.lastModified))}
+          ${backup.lastModified
+            ? getRelativeTimeString(new Date(backup.lastModified))
+            : "-"}
         </td>
         <td no-wrap>${backup.name}</td>
         <td>${backup.totalRowCount}</td>
