@@ -1,6 +1,15 @@
 {
-	"version": "2.0.0",
-	"tasks": [
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "label": "Build client",
+      "problemMatcher": []
+    },
     {
       "type": "shell",
       "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
@@ -19,5 +28,5 @@
       "label": "view vault",
       "problemMatcher": []
     }
-	]
+  ]
 }

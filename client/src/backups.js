@@ -1,7 +1,4 @@
-import {
-  html,
-  css,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css, html } from "lit";
 import { fetchJSON, formatSize, getRelativeTimeString } from "./utils.js";
 import { BackupRestoredEvent } from "./events.js";
 import { LightDOMLitElement } from "./core.js";

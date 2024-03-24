@@ -1,8 +1,4 @@
-import {
-  LitElement,
-  html,
-  css,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css, html } from "lit";
 import "./components/header.js";
 import "./components/main.js";
 import "./components/heading.js";

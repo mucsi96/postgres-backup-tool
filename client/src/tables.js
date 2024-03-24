@@ -1,7 +1,4 @@
-import {
-  css,
-  html,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { html, css } from "lit";
 import { LightDOMLitElement } from "./core.js";
 import {
   AppErrorEvent,

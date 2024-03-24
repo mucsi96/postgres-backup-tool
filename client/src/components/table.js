@@ -1,8 +1,4 @@
-import {
-  LitElement,
-  css,
-  html,
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css, html, LitElement } from "lit";
 import { LightDOMLitElement } from "../core.js";
 
 class AppTable extends LightDOMLitElement {

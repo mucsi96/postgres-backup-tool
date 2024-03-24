@@ -1,13 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: hsl(222, 47%, 11%);
+      }
+    </style>
     <title>PostgreSQL Backup Tool</title>
-    <link rel="stylesheet" href="./src/index.css" />
-    <script type="module" src="/src/app.js"></script>
+    <script>
+      const cookies = Object.fromEntries(
+        decodeURIComponent(document.cookie)
+          .split(";")
+          .map((cookie) => cookie.split("="))
+      );
+      window.appBasePath = cookies["base-path"];
+    </script>
   </head>
   <body>
+    <script type="module" src="src/app.js"></script>
+    <app-body></app-body>
   </body>
 </html>

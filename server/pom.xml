@@ -96,6 +96,7 @@
           </resource>
           <resource>
             <directory>../client/dist</directory>
+            <targetPath>static</targetPath>
           </resource>
         </resources>
         <testResources>

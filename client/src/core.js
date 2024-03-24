@@ -1,4 +1,4 @@
-import { LitElement } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { LitElement } from "lit";
 
 export class LightDOMLitElement extends LitElement {
   createRenderRoot() {

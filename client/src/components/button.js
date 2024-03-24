@@ -1,8 +1,4 @@
-import {
-  LitElement,
-  css,
-  html
-} from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css, html, LitElement } from "lit";
 
 class AppButton extends LitElement {
   static properties = {

@@ -1,4 +1,4 @@
-import { css } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
+import { css, html } from "lit";
 import "./notification.js";
 import { NotificationEvent } from "./notification.js";
 import { LightDOMLitElement } from "../core.js";
