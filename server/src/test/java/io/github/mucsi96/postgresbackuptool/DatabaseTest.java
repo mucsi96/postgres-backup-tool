@@ -54,6 +54,8 @@ public class DatabaseTest extends BaseIntegrationTest {
   @Test
   public void restores_backup() {
     setupMocks();
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//app-button[contains(text(), \"Backup\")]")));
     webDriver
         .findElement(By.xpath("//app-button[contains(text(), \"Backup\")]"))
         .click();
