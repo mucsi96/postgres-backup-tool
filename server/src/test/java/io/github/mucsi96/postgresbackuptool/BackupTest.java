@@ -42,8 +42,7 @@ public class BackupTest extends BaseIntegrationTest {
     WebElement lastBackupAfter = webDriver.findElement(
         By.xpath("//app-heading[contains(text(), \"Last backup\")]"));
 
-    assertThat(lastBackupAfter.getText().split("\\s+"))
-        .isEqualTo(new String[] { "Last", "backup", "last", "week" });
+    wait.until(ExpectedConditions.attributeToBe(lastBackupAfter, "innerText", "Last backup last week"));
   }
 
   @Test
@@ -107,6 +106,7 @@ public class BackupTest extends BaseIntegrationTest {
     WebElement retentionPeriodInput = webDriver.findElement(
         By.xpath("//label[contains(text(), \"Retention period\")]/input"));
 
+    retentionPeriodInput.clear();
     retentionPeriodInput.sendKeys(Keys.chord(Keys.CONTROL, "A"), "7");
 
     webDriver

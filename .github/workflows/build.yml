@@ -14,16 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
       - uses: ankane/setup-postgres@v1
         with:
           postgres-version: 15
+      - name: Check pg_dump version
+        run: pg_dump --version
       - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "17"
           cache: "maven"
-      - name: Check pg_dump version
-        run: pg_dump --version
+      - working-directory: client
+        run: npm ci
+      - working-directory: client
+        run: npm run build
       - working-directory: server
         run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 

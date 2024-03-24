@@ -33,6 +33,16 @@
     },
     {
       "type": "shell",
+      "label": "Test e2e",
+      "command": "mvn test",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
       "isBackground": true,
       "label": "Encrypt vault",
