@@ -29,6 +29,6 @@ RUN apk add postgresql15-client
 COPY --from=build-server ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build-server ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build-server ${DEPENDENCY}/BOOT-INF/classes /app
-COPY --from=build-client /workspace/client/dist /app
+COPY --from=build-client /workspace/client/dist /app/static
 
 ENTRYPOINT ["java", "-cp", "app:app/lib/*", "-Dspring.profiles.active=prod", "io.github.mucsi96.postgresbackuptool.App"]
