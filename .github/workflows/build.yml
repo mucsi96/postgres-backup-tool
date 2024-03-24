@@ -17,16 +17,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: npm
+          cache-dependency-path: client/package-lock.json
       - uses: ankane/setup-postgres@v1
         with:
           postgres-version: 15
       - name: Check pg_dump version
         run: pg_dump --version
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
-          java-version: "17"
-          cache: "maven"
+          distribution: temurin
+          java-version: 21
+          cache: maven
+          cache-dependency-path: server/pom.xml
       - working-directory: client
         run: npm ci
       - working-directory: client

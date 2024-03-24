@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-17 as build-server
+FROM maven:3-eclipse-temurin-21 as build-server
 
 WORKDIR /workspace/server
 
@@ -18,7 +18,7 @@ RUN npm install
 COPY client .
 RUN npm run build
 
-FROM bellsoft/liberica-openjre-alpine-musl:17
+FROM bellsoft/liberica-openjre-alpine-musl:21
 
 VOLUME /tmp
 
