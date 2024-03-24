@@ -5,3 +5,7 @@ target
 screenshots
 
 .ansible/
+
+node_modules
+
+dist

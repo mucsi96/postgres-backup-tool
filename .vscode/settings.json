@@ -24,5 +24,6 @@
         }
     ],
     "python.analysis.typeCheckingMode": "basic",
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

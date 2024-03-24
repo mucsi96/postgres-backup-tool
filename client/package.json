@@ -1,0 +1,17 @@
+{
+  "name": "postgres-backup-tool",
+  "version": "1.0.0",
+  "description": "Simple PostgreSQL backup tool to S3 Object Storage with UI",
+  "main": "index.js",
+  "author": "Igor Bari",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@mucsi96/ui-elements": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.4"
+  }
+}
