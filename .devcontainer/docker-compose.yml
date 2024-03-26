@@ -5,10 +5,11 @@ volumes:
 
 services:
   app:
-    image: mcr.microsoft.com/playwright:v1.42.1-jammy
+    image: mcr.microsoft.com/vscode/devcontainers/base:bullseye
     volumes:
       - ../..:/workspaces:cached
     environment:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       DOCKER_NETWORK: postgres-backup-tool_devcontainer_default
       TESTCONTAINERS_RYUK_DISABLED: true
       POSTGRES_HOSTNAME: db

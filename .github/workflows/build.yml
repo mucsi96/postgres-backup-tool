@@ -18,7 +18,7 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - run: npx playwright install-deps chromium
+      - run: playwright install --with-deps chromium
       - uses: ankane/setup-postgres@v1
         with:
           postgres-version: 15
@@ -35,6 +35,8 @@ jobs:
       - working-directory: client
         run: npm run build
       - working-directory: server
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
   build-images:

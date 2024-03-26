@@ -1,7 +1,6 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.202.3/containers/python-3
 {
-  "name": "Java & PostgreSQL",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
@@ -34,13 +33,14 @@
       ]
     }
   },
-  "remoteUser": "pwuser",
+  "remoteUser": "vscode",
   "postStartCommand": {
     "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
     "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
   },
   "postCreateCommand": {
-    "pip-install": "pip install -r requirements.txt"
+    "pip-install": "pip install -r requirements.txt",
+    "install-plawright": "npx --yes playwright install --with-deps chromium"
   },
   "mounts": [
     "source=/var/run/docker.sock.raw,target=/var/run/docker.sock,type=bind"
