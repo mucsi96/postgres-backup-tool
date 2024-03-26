@@ -14,16 +14,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: devcontainers/ci@v0.3
+      - uses: actions/setup-node@v4
         with:
-          imageName: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
-          cacheFrom: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
-          push: always
-          configFile: .devcontainer/devcontainer-ci.json
-          runCmd: |
-            cd client npm ci
-            npm run build
-            cd ../server mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npx playwright install-deps chromium
+      - uses: ankane/setup-postgres@v1
+        with:
+          postgres-version: 15
+      - name: Check pg_dump version
+        run: pg_dump --version
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+          cache-dependency-path: server/pom.xml
+      - working-directory: client
+        run: npm ci
+      - working-directory: client
+        run: npm run build
+      - working-directory: server
+        run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
   build-images:
     runs-on: ubuntu-latest
