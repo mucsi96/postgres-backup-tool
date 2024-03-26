@@ -19,9 +19,9 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - name: Install PG dump
-        run: >
-          apt-get -y install lsb-release
+      - name: Install PG client
+        run: |
+          apt-get update && apt-get -y install lsb-release
           curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg
           echo \
             "deb [signed-by=/etc/apt/trusted.gpg.d/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt \
