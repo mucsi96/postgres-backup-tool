@@ -15,32 +15,15 @@ jobs:
     container: mcr.microsoft.com/playwright:v1.42.1-jammy
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
+      - uses: devcontainers/ci@v0.3
         with:
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-      - name: Install PG client
-        run: |
-          apt-get update && apt-get -y install lsb-release
-          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg
-          echo \
-            "deb [signed-by=/etc/apt/trusted.gpg.d/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt \
-            $(lsb_release -cs)-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list > /dev/null
-
-          apt-get update && apt-get -y install --no-install-recommends postgresql-client-15
-          pg_dump --version
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: maven
-          cache-dependency-path: server/pom.xml
-      - working-directory: client
-        run: npm ci
-      - working-directory: client
-        run: npm run build
-      - working-directory: server
-        run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          imageName: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
+          cacheFrom: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
+          push: always
+          runCmd: |
+            cd client npm ci
+            npm run build
+            cd ../server mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
   build-images:
     runs-on: ubuntu-latest
