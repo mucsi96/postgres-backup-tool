@@ -18,7 +18,7 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - run: playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium
       - uses: ankane/setup-postgres@v1
         with:
           postgres-version: 15
