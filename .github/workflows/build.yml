@@ -19,9 +19,8 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - uses: ankane/setup-postgres@v1
-        with:
-          postgres-version: 15
+      - name: Install PG dump
+        run: apt-get -y install postgresql-client-15
       - name: Check pg_dump version
         run: pg_dump --version
       - uses: actions/setup-java@v4
