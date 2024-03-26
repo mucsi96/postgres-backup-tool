@@ -52,6 +52,6 @@ Simple PostgreSQL backup tool to S3 Object Storage with UI
 - https://flowbite.com/docs/components/tables/
 - https://hslpicker.com/
 
-### Selenium
+### Playwright for Java
 
-- https://github.com/selenium-webdriver-book/source
+- https://playwright.dev/java/

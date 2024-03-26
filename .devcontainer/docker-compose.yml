@@ -5,9 +5,7 @@ volumes:
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mcr.microsoft.com/playwright:v1.42.1-jammy
     volumes:
       - ../..:/workspaces:cached
     environment:

@@ -34,7 +34,7 @@
       ]
     }
   },
-  "remoteUser": "vscode",
+  "remoteUser": "pwuser",
   "postStartCommand": {
     "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
     "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"

@@ -1,24 +1,14 @@
 package io.github.mucsi96.postgresbackuptool;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.Duration;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,10 +23,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.lifecycle.Startables;
 
 import com.adobe.testing.s3mock.testcontainers.S3MockContainer;
+import com.microsoft.playwright.Page;
 
-import io.github.mucsi96.postgresbackuptool.model.BackupRow;
-import io.github.mucsi96.postgresbackuptool.model.TableRow;
-import io.github.mucsi96.postgresbackuptool.utils.TableUtils;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
@@ -78,9 +66,7 @@ public class BaseIntegrationTest {
   static PostgreSQLContainer<?> dbMock;
 
   @Autowired
-  WebDriver webDriver;
-
-  WebDriverWait wait;
+  Page page;
 
   @Autowired
   S3Client s3Client;
@@ -116,14 +102,11 @@ public class BaseIntegrationTest {
   }
 
   public void setupMocks(Runnable prepare) {
-    wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     cleanupS3();
     cleanupDB();
     initDB();
     prepare.run();
-    webDriver.get("http://localhost:" + port);
-    wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("app-header")));
+    page.navigate("http://localhost:" + port);
   }
 
   public void setupMocks() {
@@ -188,17 +171,8 @@ public class BaseIntegrationTest {
   }
 
   public void takeScreenshot(String name) {
-    File tmpFile = ((TakesScreenshot) webDriver)
-        .getScreenshotAs(OutputType.FILE);
-    File destFile = new File("screenshots/" + name + ".png");
-    try {
-      if (destFile.exists()) {
-        destFile.delete();
-      }
-      FileUtils.moveFile(tmpFile, destFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    page.screenshot(new Page.ScreenshotOptions()
+        .setPath(Paths.get("screenshots/" + name + ".png")));
   }
 
   private void cleanupS3() {
@@ -237,26 +211,5 @@ public class BaseIntegrationTest {
     s3Client.putObject(
         PutObjectRequest.builder().bucket(bucketName).key(filename).build(),
         RequestBody.empty());
-  }
-
-  public List<BackupRow> getBackups() {
-    WebElement table = webDriver.findElement(By.xpath(
-        "//app-heading[contains(text(), \"Backups\")]/following-sibling::app-table"));
-    return TableUtils.getRows(table,
-        cells -> BackupRow.builder().date(cells.get(1).getText())
-            .name(cells.get(2).getText())
-            .records(Integer.parseInt(cells.get(3).getText()))
-            .size(cells.get(4).getText())
-            .retention(Integer.parseInt(cells.get(5).getText().split(" ")[0]))
-            .build());
-  }
-
-  public List<TableRow> getDatabaseTables() {
-    WebElement table = webDriver.findElement(By.xpath(
-        "//app-heading[contains(text(), \"Tables\")]/following-sibling::app-table"));
-
-    return TableUtils.getRows(table,
-        cells -> TableRow.builder().name(cells.get(0).getText())
-            .rows(Integer.parseInt(cells.get(1).getText())).build());
   }
 }

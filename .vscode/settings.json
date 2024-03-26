@@ -1,5 +1,4 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
     "maven.terminal.favorites": [
         {
             "command": "spring-boot:run",
@@ -11,6 +10,7 @@
         "editor.tabSize": 2
     },
     "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.compile.nullAnalysis.mode": "disabled",
     "sqltools.connections": [
         {
             "previewLimit": 50,
