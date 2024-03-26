@@ -19,6 +19,7 @@ jobs:
           imageName: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
           cacheFrom: ghcr.io/mucsi96/postgres-backup-tool-devcontainer
           push: always
+          configFile: .devcontainer/devcontainer-ci.json
           runCmd: |
             cd client npm ci
             npm run build

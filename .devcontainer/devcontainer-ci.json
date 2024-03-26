@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.202.3/containers/python-3
+{
+  "image": "mcr.microsoft.com/playwright:v1.42.1-jammy",
+  "features": {
+    // https://containers.dev/features
+    // https://github.com/devcontainers/features
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "installMaven": true
+    },
+    "ghcr.io/robbert229/devcontainer-features/postgresql-client:1": {
+      "version": "15"
+    }
+  },
+  "remoteUser": "pwuser",
+  "postStartCommand": {
+    "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
+  },
+  "postCreateCommand": {
+    "pip-install": "pip install -r requirements.txt"
+  },
+  "mounts": [
+    "source=/var/run/docker.sock.raw,target=/var/run/docker.sock,type=bind"
+  ]
+}
