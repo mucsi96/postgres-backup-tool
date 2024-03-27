@@ -44,7 +44,7 @@
     {
       "type": "shell",
       "label": "Compose",
-      "command": "node docker-compose.js | docker compose --file - up --force-recreate --remove-orphans",
+      "command": "node docker-compose.js | docker compose --file - up --force-recreate --remove-orphans --pull always",
       "problemMatcher": []
     },
     {
