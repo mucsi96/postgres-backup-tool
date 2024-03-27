@@ -10,7 +10,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@mucsi96/ui-elements": "^2.0.0",
+    "@mucsi96/ui-elements": "^3.0.0",
     "lit": "^3.1.2"
   },
   "devDependencies": {
