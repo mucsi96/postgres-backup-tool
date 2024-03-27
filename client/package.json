@@ -6,6 +6,7 @@
   "author": "Igor Bari",
   "license": "MIT",
   "scripts": {
+    "start": "vite dev",
     "build": "vite build"
   },
   "dependencies": {

@@ -23,6 +23,15 @@
     },
     {
       "type": "shell",
+      "label": "Start client",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "label": "Start server",
       "command": "mvn spring-boot:run",
       "isBackground": true,

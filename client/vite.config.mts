@@ -12,4 +12,12 @@ export default defineConfig({
       return { relative: true };
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

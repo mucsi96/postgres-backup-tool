@@ -66,7 +66,7 @@ class App extends LightDOMLitElement {
 
   async #fetchLastBackupTime() {
     try {
-      const lastBackupResponse = await fetchJSON("/last-backup-time")
+      const lastBackupResponse = await fetchJSON("/last-backup-time");
       const lastBackupTime = lastBackupResponse && new Date(lastBackupResponse);
       if (
         !lastBackupTime ||
@@ -76,7 +76,8 @@ class App extends LightDOMLitElement {
       ) {
         this.dispatchEvent(new AppErrorEvent("No backup since one day"));
       }
-      this.lastBackupTime = lastBackupTime && getRelativeTimeString(lastBackupTime);
+      this.lastBackupTime =
+        lastBackupTime && getRelativeTimeString(lastBackupTime);
     } catch (err) {
       this.lastBackupTime = "";
       this.dispatchEvent(
@@ -135,4 +136,14 @@ class App extends LightDOMLitElement {
   }
 }
 
+if (import.meta.env.MODE === "development") {
+  window.appBasePath = "api";
+} else {
+  const cookies = Object.fromEntries(
+    decodeURIComponent(document.cookie)
+      .split(";")
+      .map((cookie) => cookie.split("="))
+  );
+  window.appBasePath = cookies["base-path"];
+}
 window.customElements.define("app-body", App);
