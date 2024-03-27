@@ -1,2 +1,3 @@
 - Migrate to TS
 - Migrate to ui-components
+- Create start client which proxies backend calls to Java

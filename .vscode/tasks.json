@@ -43,6 +43,12 @@
     },
     {
       "type": "shell",
+      "label": "Compose",
+      "command": "node docker-compose.js | docker compose --file - up --force-recreate --remove-orphans",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
       "isBackground": true,
       "label": "Encrypt vault",

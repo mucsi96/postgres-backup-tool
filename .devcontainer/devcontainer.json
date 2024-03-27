@@ -14,7 +14,8 @@
     },
     "ghcr.io/robbert229/devcontainer-features/postgresql-client:1": {
       "version": "15"
-    }
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "customizations": {
     "vscode": {
@@ -33,16 +34,15 @@
       ]
     }
   },
+  "containerEnv": {
+    "WORKSPACE_ROOT": "${localWorkspaceFolder}"
+  },
   "remoteUser": "vscode",
   "postStartCommand": {
-    "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
-    "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
+    "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}"
   },
   "postCreateCommand": {
     "pip-install": "pip install -r requirements.txt",
     "install-plawright": "npx --yes playwright install --with-deps chromium"
-  },
-  "mounts": [
-    "source=/var/run/docker.sock.raw,target=/var/run/docker.sock,type=bind"
-  ]
+  }
 }
