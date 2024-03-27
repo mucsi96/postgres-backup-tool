@@ -11,7 +11,7 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/client"
     schedule:
       interval: "weekly"
 
@@ -21,6 +21,6 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/server"
     schedule:
       interval: "weekly"
