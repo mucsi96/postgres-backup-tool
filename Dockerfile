@@ -18,7 +18,7 @@ RUN npm install
 COPY client .
 RUN npm run build
 
-FROM bellsoft/liberica-openjre-alpine-musl:21
+FROM bellsoft/liberica-openjre-alpine-musl:22
 
 VOLUME /tmp
 
