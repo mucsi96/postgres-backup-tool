@@ -66,10 +66,7 @@ class App extends LightDOMLitElement {
 
   async #fetchLastBackupTime() {
     try {
-      const lastBackupResponse = await (
-        await fetch("/last-backup-time")
-      ).json();
-
+      const lastBackupResponse = await fetchJSON("/last-backup-time")
       const lastBackupTime = lastBackupResponse && new Date(lastBackupResponse);
       if (
         !lastBackupTime ||
