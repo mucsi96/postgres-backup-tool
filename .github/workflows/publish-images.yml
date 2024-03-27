@@ -1,0 +1,32 @@
+name: Publish images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
+
+concurrency:
+  group: any
+  cancel-in-progress: true
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+          cache: "pip"
+      - run: pip install -r requirements.txt
+
+      - run: python scripts/build_docker_image.py ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ANSIBLE_VAULT_KEY }}

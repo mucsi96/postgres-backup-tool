@@ -1,9 +1,8 @@
-name: CI
+name: Test
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [main]
 
 concurrency:
   group: any
@@ -38,22 +37,3 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-
-  build-images:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs:
-      - test
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.12
-          cache: "pip"
-      - run: pip install -r requirements.txt
-
-      - run: python scripts/build_docker_image.py ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ANSIBLE_VAULT_KEY }}
