@@ -1,17 +1,31 @@
-import { css, html, LitElement } from "lit";
+import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
-export class NotificationEvent extends Event {
-  constructor(name) {
-    super(name, { bubbles: true, composed: true });
+export class NotificationEvent extends CustomEvent<string> {
+  constructor(name: string, message?: string) {
+    super(name, { bubbles: true, composed: true, detail: message });
+  }
+}
+
+export class ErrorNotificationEvent extends NotificationEvent {
+  constructor(error: string) {
+    super('error-notification', error);
+  }
+}
+
+export class SuccessNotificationEvent extends NotificationEvent {
+  constructor(message: string) {
+    super('success-notification', message);
   }
 }
 
 export class NotificationEndEvent extends NotificationEvent {
   constructor() {
-    super("notification-end");
+    super('notification-end');
   }
 }
 
+@customElement('app-notification')
 class Notification extends LitElement {
   static properties = {
     type: { type: String },
@@ -50,12 +64,12 @@ class Notification extends LitElement {
         fade-out 0.3s ease 3s forwards;
     }
 
-    :host([type="error"]) {
+    :host([type='error']) {
       background-color: hsl(0, 96%, 77%);
       color: hsl(0, 74%, 16%);
     }
 
-    :host([type="success"]) {
+    :host([type='success']) {
       background-color: hsl(145, 78%, 68%);
       color: hsl(145, 100%, 14%);
     }
@@ -72,5 +86,3 @@ class Notification extends LitElement {
     return html`<slot></slot>`;
   }
 }
-
-window.customElements.define("app-notification", Notification);

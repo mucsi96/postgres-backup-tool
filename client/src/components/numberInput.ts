@@ -1,21 +1,29 @@
-import { css, html } from "lit";
-import { LightDOMLitElement } from "../core.js";
+import { css, html } from 'lit';
+import { LightDOMLitElement } from '../core';
+import { customElement, property } from 'lit/decorators.js';
 
-export class ValueChangeEvent extends Event {
-  constructor(value) {
-    super("value-change", { bubbles: true, composed: true });
-    this.details = value;
+export class ValueChangeEvent extends CustomEvent<string> {
+  constructor(value: string) {
+    super('value-change', { bubbles: true, composed: true, detail: value });
   }
 }
 
+@customElement('app-number-input')
 class NumberInput extends LightDOMLitElement {
-  static properties = {
-    label: { type: String },
-    value: { type: String },
-    min: { type: Number },
-    max: { type: Number },
-    step: { type: Number },
-  };
+  @property({ type: String })
+  label = '';
+
+  @property({ type: String })
+  value = '';
+
+  @property({ type: Number })
+  min = 0;
+
+  @property({ type: Number })
+  max = 100;
+
+  @property({ type: Number })
+  step = 1;
 
   static styles = css`
     & {
@@ -67,10 +75,9 @@ class NumberInput extends LightDOMLitElement {
         min=${this.min}
         max=${this.max}
         step=${this.step}
-        @change=${(event) =>
+        @change=${(event: Event) =>
+          event.target instanceof HTMLInputElement &&
           this.dispatchEvent(new ValueChangeEvent(event.target.value))}
     /></label>`;
   }
 }
-
-window.customElements.define("app-number-input", NumberInput);

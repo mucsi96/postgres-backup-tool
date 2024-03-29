@@ -1,10 +1,11 @@
-import { css, html } from "lit";
-import { LightDOMLitElement } from "../core.js";
+import { css, html } from 'lit';
+import { LightDOMLitElement } from '../core';
+import { customElement, property } from 'lit/decorators.js';
 
+@customElement('app-header')
 class AppHeader extends LightDOMLitElement {
-  static properties = {
-    title: "",
-  };
+  @property({ type: String })
+  title = '';
 
   static styles = css`
     & {
@@ -31,11 +32,9 @@ class AppHeader extends LightDOMLitElement {
   render() {
     return html`
       <header>
-        <app-heading level="1">${this.title}</app-heading>
+        <h1 is="app-heading">${this.title}</h1>
         ${this.children}
       </header>
     `;
   }
 }
-
-window.customElements.define("app-header", AppHeader);

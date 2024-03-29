@@ -1,5 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
+@customElement('app-loader')
 class AppLoader extends LitElement {
   static styles = css`
     :host {
@@ -58,5 +60,3 @@ class AppLoader extends LitElement {
     `;
   }
 }
-
-window.customElements.define("app-loader", AppLoader);

@@ -1,11 +1,10 @@
-import { css, html, LitElement } from "lit";
+import { css } from "lit";
+import { customElement } from "./utils";
 
-class AppBadge extends LitElement {
-  static properties = {
-    type: { type: String },
-  };
-
-  static styles = css`
+@customElement({
+  name: "app-badge",
+  extends: "span",
+  styles: css`
     :host {
       background-color: white;
       color: rgb(30, 66, 159);
@@ -19,11 +18,8 @@ class AppBadge extends LitElement {
       transform: scale(0.8) translateY(0.1em);
       transform-origin: center left;
     }
-  `;
+  `,
 
-  render() {
-    return html`<slot></slot>`
-  }
-}
+})
+class AppBadge extends HTMLSpanElement {}
 
-window.customElements.define("app-badge", AppBadge);
