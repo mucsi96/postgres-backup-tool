@@ -1,29 +1,17 @@
-import { html, css } from 'lit';
-import { LightDOMLitElement } from './core';
+import { LitElement, css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import { customElement } from './components/utils';
 import {
   AppErrorEvent,
   BackupCreatedEvent,
   CleanupFinishedEvent,
 } from './events';
 import { fetchJSON } from './utils';
-import { customElement, property } from 'lit/decorators.js';
 
-@customElement('app-tables')
-class AppTables extends LightDOMLitElement {
-  @property({ type: Array })
-  tables: { name: string; rowCount: number }[] = [];
-
-  @property({ type: Number })
-  totalCount = 0;
-
-  @property({ type: Boolean })
-  processing = false;
-
-  @property({ type: Number })
-  retentionPeriod = 1;
-
-  static styles = css`
-    & {
+@customElement({
+  name: 'app-tables',
+  styles: css`
+    :host {
       display: grid;
       gap: 40px;
     }
@@ -34,27 +22,38 @@ class AppTables extends LightDOMLitElement {
       display: grid;
       gap: 20px;
     }
-  `;
+  `,
+})
+class AppTables extends LitElement {
+  @property({ type: Array })
+  tables: { name: string; rowCount: number }[] = [];
+
+  @property({ type: Number })
+  totalCount?: number;
+
+  @property({ type: Boolean })
+  processing = false;
+
+  @property({ type: Number })
+  retentionPeriod = 1;
 
   render() {
     this.style.justifyContent = this.tables ? 'flex-start' : 'center';
 
     if (!this.tables) {
-      return html`<app-loader></app-loader>`;
+      return html`<bt-loader></bt-loader>`;
     }
 
     const actionsDisabled = this.processing;
 
     return html`
-      <h2 is="app-heading">
-        Records <span is="app-badge">${this.totalCount}</span>
-      </h2>
+      <h2 is="bt-heading">Records <bt-badge>${this.totalCount}</bt-badge></h2>
       <div class="tables">
-        <h2 is="app-heading">
-          Tables <span is="app-badge">${this.tables.length}</span>
+        <h2 is="bt-heading">
+          Tables <bt-badge>${this.tables.length}</bt-badge>
         </h2>
         ${this.tables.length
-          ? html`<table is="app-table">
+          ? html`<table is="bt-table">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -75,8 +74,8 @@ class AppTables extends LightDOMLitElement {
           : ''}
       </div>
       <div class="backup">
-        <h2 is="app-heading">Backup</h2>
-        <app-number-input
+        <h2 is="bt-heading">Backup</h2>
+        <bt-number-input
           label="Retention period (days)"
           value=${this.retentionPeriod}
           min="1"
@@ -85,10 +84,10 @@ class AppTables extends LightDOMLitElement {
           @value-change=${(event: CustomEvent<number>) => {
             this.retentionPeriod = event.detail;
           }}
-        ></app-number-input>
+        ></bt-number-input>
         <section>
           <button
-            is="app-button"
+            is="bt-button"
             ?disabled=${actionsDisabled}
             @click="${actionsDisabled
               ? undefined
@@ -99,10 +98,10 @@ class AppTables extends LightDOMLitElement {
         </section>
       </div>
       <div class="cleanup">
-        <h2 is="app-heading">Cleanup</h2>
+        <h2 is="bt-heading">Cleanup</h2>
         <section>
           <button
-            is="app-button"
+            is="bt-button"
             color="red"
             ?disabled=${actionsDisabled}
             @click="${actionsDisabled ? undefined : () => this.#cleanup()}"

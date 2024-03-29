@@ -1,14 +1,10 @@
-import { css, html } from 'lit';
-import { LightDOMLitElement } from '../core';
-import { customElement, property } from 'lit/decorators.js';
+import { LitElement, css, html } from 'lit';
+import { customElement } from './utils';
 
-@customElement('app-header')
-class AppHeader extends LightDOMLitElement {
-  @property({ type: String })
-  title = '';
-
-  static styles = css`
-    & {
+@customElement({
+  name: 'bt-header',
+  styles: css`
+    :host {
       display: block;
       background-color: hsl(215, 28%, 17%);
       border-bottom: 1px solid hsl(215, 14%, 34%);
@@ -17,24 +13,26 @@ class AppHeader extends LightDOMLitElement {
       z-index: 40;
       font-family: system-ui;
       font-size: 14px;
-    }
 
-    & header {
-      padding: 18px 1rem 19px;
-      max-width: 90rem;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      div {
+        padding: 18px 1rem 19px;
+        max-width: 90rem;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
-  `;
-
+  `,
+  extends: 'header',
+})
+class BTHeader extends LitElement {
   render() {
     return html`
-      <header>
-        <h1 is="app-heading">${this.title}</h1>
+      <div>
+        <h1 is="bt-heading">${this.title}</h1>
         ${this.children}
-      </header>
+      </div>
     `;
   }
 }

@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('app-loader')
+@customElement('bt-loader')
 class AppLoader extends LitElement {
   static styles = css`
     :host {

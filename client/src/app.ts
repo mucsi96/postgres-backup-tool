@@ -1,21 +1,24 @@
-import { css, html } from 'lit';
-import './components/header';
-import './components/main';
-import './components/heading';
-import './components/button';
-import './components/table';
-import './components/rowSelector';
-import './components/loader';
+import { LitElement, css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import './backups';
 import './components/badge';
+import './components/button';
+import './components/header';
+import './components/heading';
+import './components/loader';
+import './components/main';
+import {
+  ErrorNotificationEvent,
+  SuccessNotificationEvent,
+} from './components/notification';
 import './components/notifications';
 import './components/numberInput';
-import './tables';
-import './backups';
+import './components/rowSelector';
+import './components/table';
+import { customElement } from './components/utils';
 import { AppErrorEvent } from './events';
+import './tables';
 import { fetchJSON, getRelativeTimeString } from './utils';
-import { LightDOMLitElement } from './core';
-import { ErrorNotificationEvent, SuccessNotificationEvent } from './components/notification';
-import { customElement, property } from 'lit/decorators.js';
 
 interface CustomEventMap {
   'app-error': AppErrorEvent;
@@ -26,25 +29,15 @@ declare global {
       type: K,
       listener: (this: Document, ev: CustomEventMap[K]) => void
     ): void;
-    dispatchEvent<K extends keyof CustomEventMap>(ev: CustomEventMap[K]): boolean;
+    dispatchEvent<K extends keyof CustomEventMap>(
+      ev: CustomEventMap[K]
+    ): boolean;
   }
 }
 
-@customElement('app-body')
-class App extends LightDOMLitElement {
-  @property({ type: Array })
-  tables = [];
-
-  @property({ type: Number })
-  totalRowCount = 0;
-
-  @property({ type: Array })
-  backups = [];
-
-  @property({ type: String })
-  lastBackupTime?: string;
-
-  static styles = css`
+@customElement({
+  name: 'app-body',
+  styles: css`
     #main {
       margin-top: 32px;
       display: grid;
@@ -52,7 +45,20 @@ class App extends LightDOMLitElement {
       align-items: flex-start;
       gap: 32px;
     }
-  `;
+  `,
+})
+class App extends LitElement {
+  @property({ type: Array })
+  tables = [];
+
+  @property({ type: Number })
+  totalRowCount?: number;
+
+  @property({ type: Array })
+  backups = [];
+
+  @property({ type: String })
+  lastBackupTime?: string;
 
   constructor() {
     super();
@@ -69,7 +75,9 @@ class App extends LightDOMLitElement {
       this.totalRowCount = totalRowCount;
     } catch (err) {
       this.tables = [];
-      this.dispatchEvent(new AppErrorEvent('Unable to fetch tables', err as Error));
+      this.dispatchEvent(
+        new AppErrorEvent('Unable to fetch tables', err as Error)
+      );
     }
   }
 
@@ -78,7 +86,9 @@ class App extends LightDOMLitElement {
       this.backups = await fetchJSON('/backups');
     } catch (err) {
       this.backups = [];
-      this.dispatchEvent(new AppErrorEvent('Unable to fetch backups', err as Error));
+      this.dispatchEvent(
+        new AppErrorEvent('Unable to fetch backups', err as Error)
+      );
     }
   }
 
@@ -112,16 +122,16 @@ class App extends LightDOMLitElement {
 
   render() {
     return html`
-      <app-header title="Postgres Backup Tool" ]
-        ><h3 is="app-heading">
-          Last backup <span is="app-badge">${this.lastBackupTime}</span>
-        </h3></app-header
-      >
-      <main is="app-main">
+      <header is="bt-header" title="Postgres Backup Tool">
+        <h3 is="bt-heading">
+          Last backup <bt-badge>${this.lastBackupTime}</bt-badge>
+        </h3>
+      </header>
+      <main is="bt-main">
         <div id="main">
           <app-tables
             .tables=${this.tables}
-            total-count=${this.totalRowCount}
+            .totalCount=${this.totalRowCount}
             @backup-created=${() => {
               this.#fetchBackups();
               this.#fetchLastBackupTime();
@@ -148,7 +158,7 @@ class App extends LightDOMLitElement {
           ></app-backups>
         </div>
       </main>
-      <app-notifications></app-notifications>
+      <bt-notifications></bt-notifications>
     `;
   }
 }

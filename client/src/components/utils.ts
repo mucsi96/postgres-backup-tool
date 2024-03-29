@@ -19,7 +19,7 @@ function injectStyles({
   const style = document.createElement('style');
   style.innerHTML = styles.cssText.replace(
     /:host/g,
-    `${extendsTag}[is='${name}']`
+    extendsTag ? `${extendsTag}[is='${name}']` : name
   );
   style.setAttribute('data-is', name);
   document.head.append(style);
@@ -29,6 +29,9 @@ export function customElement(options: CustomElementOptions) {
   const { name, extends: extendsTag, styles } = options;
   return (elementClass: CustomElementConstructor) => {
     styles && injectStyles(options);
+    elementClass.prototype.createRenderRoot = function () {
+      return this;
+    };
     customElements.define(name, elementClass, { extends: extendsTag });
   };
 }

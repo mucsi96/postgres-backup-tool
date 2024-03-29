@@ -2,7 +2,7 @@ import { css } from 'lit';
 import { customElement } from './utils';
 
 @customElement({
-  name: 'app-main',
+  name: 'bt-main',
   extends: 'main',
   styles: css`
     :host {

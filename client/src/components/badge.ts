@@ -1,10 +1,9 @@
-import { css } from "lit";
-import { customElement } from "./utils";
+import { LitElement, css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
-@customElement({
-  name: "app-badge",
-  extends: "span",
-  styles: css`
+@customElement('bt-badge')
+class BTBadge extends LitElement {
+  static styles = css`
     :host {
       background-color: white;
       color: rgb(30, 66, 159);
@@ -18,8 +17,9 @@ import { customElement } from "./utils";
       transform: scale(0.8) translateY(0.1em);
       transform-origin: center left;
     }
-  `,
+  `;
 
-})
-class AppBadge extends HTMLSpanElement {}
-
+  render() {
+    return html`<slot></slot>`;
+  }
+}

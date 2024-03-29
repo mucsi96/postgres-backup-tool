@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('app-row-selector')
+@customElement('bt-row-selector')
 class AppRowSelector extends LitElement {
   static styles = css`
     :host {

@@ -25,7 +25,7 @@ export class NotificationEndEvent extends NotificationEvent {
   }
 }
 
-@customElement('app-notification')
+@customElement('bt-notification')
 class Notification extends LitElement {
   static properties = {
     type: { type: String },

@@ -2,7 +2,7 @@ import { css } from 'lit';
 import { customElement } from './utils';
 
 @customElement({
-  name: 'app-table',
+  name: 'bt-table',
   extends: 'table',
   styles: css`
     :host {
@@ -24,20 +24,20 @@ import { customElement } from './utils';
       transition: background-color 0.3s;
     }
 
-    :host tr:has(app-row-selector) {
+    :host tr:has(bt-row-selector) {
       cursor: pointer;
     }
 
-    :host tr:has(app-row-selector):hover {
+    :host tr:has(bt-row-selector):hover {
       background-color: hsl(217, 19%, 27%);
     }
 
-    :host tr:has(app-row-selector[selected]) {
+    :host tr:has(bt-row-selector[selected]) {
       background-color: hsl(215, 44%, 28%);
       color: hsl(218, 11%, 65%);
     }
 
-    :host tr:has(app-row-selector[selected]):hover {
+    :host tr:has(bt-row-selector[selected]):hover {
       background-color: hsl(215, 44%, 28%);
     }
 

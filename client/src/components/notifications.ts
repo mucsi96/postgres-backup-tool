@@ -1,11 +1,10 @@
-import { css } from 'lit';
-import { LightDOMLitElement } from '../core';
+import { LitElement, css } from 'lit';
 import './notification';
 import {
   ErrorNotificationEvent,
-  SuccessNotificationEvent
+  SuccessNotificationEvent,
 } from './notification';
-import { customElement } from 'lit/decorators.js';
+import { customElement } from './utils';
 
 interface CustomEventMap {
   'success-notification': SuccessNotificationEvent;
@@ -17,14 +16,16 @@ declare global {
       type: K,
       listener: (this: Document, ev: CustomEventMap[K]) => void
     ): void;
-    dispatchEvent<K extends keyof CustomEventMap>(ev: CustomEventMap[K]): boolean;
+    dispatchEvent<K extends keyof CustomEventMap>(
+      ev: CustomEventMap[K]
+    ): boolean;
   }
 }
 
-@customElement('app-notifications')
-class Notifications extends LightDOMLitElement {
-  static styles = css`
-    & {
+@customElement({
+  name: 'bt-notifications',
+  styles: css`
+    :host {
       pointer-events: none;
       position: fixed;
       z-index: 100;
@@ -34,8 +35,9 @@ class Notifications extends LightDOMLitElement {
       gap: 16px;
       align-items: flex-end;
     }
-  `;
-
+  `,
+})
+class Notifications extends LitElement {
   constructor() {
     super();
     document.addEventListener(
@@ -51,7 +53,7 @@ class Notifications extends LightDOMLitElement {
   }
 
   addNotification(type: string, text: string) {
-    const notification = document.createElement('app-notification');
+    const notification = document.createElement('bt-notification');
     notification.setAttribute('type', type);
     notification.appendChild(document.createTextNode(text));
     notification.addEventListener('notification-end', () =>

@@ -2,7 +2,7 @@ import { css } from "lit";
 import { customElement } from "./utils";
 
 @customElement({
-  name: "app-button",
+  name: "bt-button",
   extends: "button",
   styles: css`
     :host {
@@ -47,4 +47,4 @@ import { customElement } from "./utils";
   `,
 
 })
-class AppButton extends HTMLButtonElement{}
+class BTButton extends HTMLButtonElement{}

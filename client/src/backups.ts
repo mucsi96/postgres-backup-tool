@@ -1,8 +1,8 @@
-import { css, html } from 'lit';
-import { fetchJSON, formatSize, getRelativeTimeString } from './utils';
+import { LitElement, css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import { customElement } from './components/utils';
 import { AppErrorEvent, BackupRestoredEvent } from './events';
-import { LightDOMLitElement } from './core';
-import { customElement, property } from 'lit/decorators.js';
+import { fetchJSON, formatSize, getRelativeTimeString } from './utils';
 
 type Backup = {
   name: string;
@@ -24,8 +24,16 @@ function formatRetention(value: number) {
   return `${value} days`;
 }
 
-@customElement('app-backups')
-class AppBackups extends LightDOMLitElement {
+@customElement({
+  name: 'app-backups',
+  styles: css`
+    :host {
+      display: grid;
+      gap: 20px;
+    }
+  `,
+})
+class AppBackups extends LitElement {
   @property({ type: Array })
   backups = [];
 
@@ -35,26 +43,19 @@ class AppBackups extends LightDOMLitElement {
   @property({ type: Boolean })
   processing = false;
 
-  static styles = css`
-    & {
-      display: grid;
-      gap: 20px;
-    }
-  `;
-
   render() {
     this.style.justifyContent = this.backups ? 'flex-start' : 'center';
 
     if (!this.backups) {
-      return html`<app-loader></app-loader>`;
+      return html`<bt-loader></bt-loader>`;
     }
 
     return html`
-      <h2 is="app-heading">
-        Backups <span is="app-badge">${this.backups.length}</span>
+      <h2 is="bt-heading">
+        Backups <bt-badge>${this.backups.length}</bt-badge>
       </h2>
       ${this.backups.length
-        ? html`<table is="app-table" id="backups">
+        ? html`<table is="bt-table" id="backups">
             <thead>
               <tr>
                 <th></th>
@@ -84,9 +85,9 @@ class AppBackups extends LightDOMLitElement {
         }}
       >
         <td>
-          <app-row-selector
+          <bt-row-selector
             ?selected=${backup.name === this.selectedBackup}
-          ></app-row-selector>
+          ></bt-row-selector>
         </td>
         <td highlighted no-wrap>
           ${backup.lastModified
@@ -99,7 +100,7 @@ class AppBackups extends LightDOMLitElement {
         <td center-align>${formatRetention(backup.retentionPeriod)}</td>
         <td center-align>
           <button
-            is="app-button"
+            is="bt-button"
             ?disabled=${actionsDisabled}
             @click=${actionsDisabled ? undefined : () => this.#restore()}
           >
