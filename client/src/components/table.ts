@@ -46,6 +46,17 @@ import { customElement } from './utils';
       border-bottom: 1px solid hsl(217, 19%, 27%);
     }
 
+    :host th[right-align],
+    :host td[right-align] {
+      text-align: right;
+    }
+
+    :host th[center-align],
+    :host td[center-align] {
+      text-align: center;
+    }
+
+    :host th[no-wrap],
     :host td[no-wrap] {
       white-space: nowrap;
     }

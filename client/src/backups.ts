@@ -60,10 +60,10 @@ class AppBackups extends LightDOMLitElement {
                 <th></th>
                 <th>Date</th>
                 <th>Name</th>
-                <th>Records</th>
-                <th>Size</th>
-                <th>Retention</th>
-                <th>Action</th>
+                <th center-align>Records</th>
+                <th center-align>Size</th>
+                <th center-align>Retention</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -94,10 +94,10 @@ class AppBackups extends LightDOMLitElement {
             : '-'}
         </td>
         <td no-wrap>${backup.name}</td>
-        <td>${backup.totalRowCount}</td>
-        <td no-wrap>${formatSize(backup.size)}</td>
-        <td>${formatRetention(backup.retentionPeriod)}</td>
-        <td>
+        <td center-align>${backup.totalRowCount}</td>
+        <td no-wrap center-align>${formatSize(backup.size)}</td>
+        <td center-align>${formatRetention(backup.retentionPeriod)}</td>
+        <td center-align>
           <button
             is="app-button"
             ?disabled=${actionsDisabled}
