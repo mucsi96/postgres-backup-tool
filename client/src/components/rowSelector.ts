@@ -1,9 +1,11 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from './utils';
 
-@customElement('bt-row-selector')
-class AppRowSelector extends LitElement {
-  static styles = css`
+@customElement({
+  name: 'bt-row-selector',
+  shadow: true,
+  styles: css`
     :host {
       display: contents;
       transition: color 0.3s;
@@ -16,8 +18,9 @@ class AppRowSelector extends LitElement {
     :host svg {
       transform: rotate(-90deg);
     }
-  `;
-
+  `,
+})
+class BTRowSelector extends LitElement {
   @property({ type: Boolean })
   selected = false;
 

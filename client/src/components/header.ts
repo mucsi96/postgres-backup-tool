@@ -3,6 +3,7 @@ import { customElement } from './utils';
 
 @customElement({
   name: 'bt-header',
+  extends: 'header',
   styles: css`
     :host {
       display: block;
@@ -24,7 +25,6 @@ import { customElement } from './utils';
       }
     }
   `,
-  extends: 'header',
 })
 class BTHeader extends LitElement {
   render() {

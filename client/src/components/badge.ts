@@ -1,9 +1,10 @@
-import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { LitElement, css } from 'lit';
+import { customElement } from './utils';
 
-@customElement('bt-badge')
-class BTBadge extends LitElement {
-  static styles = css`
+@customElement({
+  name: 'bt-badge',
+  shadow: true,
+  styles: css`
     :host {
       background-color: white;
       color: rgb(30, 66, 159);
@@ -17,9 +18,6 @@ class BTBadge extends LitElement {
       transform: scale(0.8) translateY(0.1em);
       transform-origin: center left;
     }
-  `;
-
-  render() {
-    return html`<slot></slot>`;
-  }
-}
+  `,
+})
+class BTBadge extends LitElement {}

@@ -7,6 +7,7 @@ import {
   CleanupFinishedEvent,
 } from './events';
 import { fetchJSON } from './utils';
+import { Table } from './models';
 
 @customElement({
   name: 'app-tables',
@@ -26,7 +27,7 @@ import { fetchJSON } from './utils';
 })
 class AppTables extends LitElement {
   @property({ type: Array })
-  tables: { name: string; rowCount: number }[] = [];
+  tables?: Table[];
 
   @property({ type: Number })
   totalCount?: number;
@@ -75,16 +76,22 @@ class AppTables extends LitElement {
       </div>
       <div class="backup">
         <h2 is="bt-heading">Backup</h2>
-        <bt-number-input
-          label="Retention period (days)"
-          value=${this.retentionPeriod}
-          min="1"
-          max="356"
-          step="1"
-          @value-change=${(event: CustomEvent<number>) => {
-            this.retentionPeriod = event.detail;
-          }}
-        ></bt-number-input>
+        <label is="bt-input-label"
+          >Retention period (days)<input
+            type="number"
+            value=${this.retentionPeriod}
+            min="1"
+            max="356"
+            step="1"
+            @change=${(event: Event) => {
+              if (
+                event.target instanceof HTMLInputElement &&
+                event.target.value
+              ) {
+                this.retentionPeriod = parseInt(event.target.value);
+              }
+            }}
+        /></label>
         <section>
           <button
             is="bt-button"

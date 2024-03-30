@@ -1,9 +1,10 @@
-import { css, html, LitElement } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import { html, css, LitElement } from 'lit';
+import { customElement } from './utils';
 
-@customElement('bt-loader')
-class AppLoader extends LitElement {
-  static styles = css`
+@customElement({
+  name: 'bt-loader',
+  shadow: true,
+  styles: css`
     :host {
       display: grid;
       justify-content: center;
@@ -20,22 +21,22 @@ class AppLoader extends LitElement {
       width: 7px;
       display: inline-block;
       animation: sk-stretchdelay 1.2s infinite ease-in-out;
-    }
 
-    div:nth-child(2) {
-      animation-delay: -1.1s;
-    }
+      &:nth-child(2) {
+        animation-delay: -1.1s;
+      }
 
-    div:nth-child(3) {
-      animation-delay: -1s;
-    }
+      &:nth-child(3) {
+        animation-delay: -1s;
+      }
 
-    div:nth-child(4) {
-      animation-delay: -0.9s;
-    }
+      &:nth-child(4) {
+        animation-delay: -0.9s;
+      }
 
-    div:nth-child(5) {
-      animation-delay: -0.8s;
+      &:nth-child(5) {
+        animation-delay: -0.8s;
+      }
     }
 
     @keyframes sk-stretchdelay {
@@ -48,15 +49,16 @@ class AppLoader extends LitElement {
         transform: scaleY(1);
       }
     }
-  `;
-
+  `,
+})
+class BTLoader extends LitElement {
   render() {
     return html`
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     `;
   }
 }

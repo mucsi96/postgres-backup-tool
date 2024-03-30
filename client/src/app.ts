@@ -12,13 +12,14 @@ import {
   SuccessNotificationEvent,
 } from './components/notification';
 import './components/notifications';
-import './components/numberInput';
+import './components/inputLabel';
 import './components/rowSelector';
 import './components/table';
 import { customElement } from './components/utils';
 import { AppErrorEvent } from './events';
 import './tables';
 import { fetchJSON, getRelativeTimeString } from './utils';
+import { Backup, Table } from './models';
 
 interface CustomEventMap {
   'app-error': AppErrorEvent;
@@ -49,13 +50,13 @@ declare global {
 })
 class App extends LitElement {
   @property({ type: Array })
-  tables = [];
+  tables?: Table[];
 
   @property({ type: Number })
   totalRowCount?: number;
 
   @property({ type: Array })
-  backups = [];
+  backups?: Backup[]
 
   @property({ type: String })
   lastBackupTime?: string;
@@ -70,7 +71,7 @@ class App extends LitElement {
 
   async #fetchTables() {
     try {
-      const { tables, totalRowCount } = await fetchJSON('/tables');
+      const { tables, totalRowCount } = await fetchJSON<{tables: Table[], totalRowCount: number }>('/tables');
       this.tables = tables;
       this.totalRowCount = totalRowCount;
     } catch (err) {
@@ -83,7 +84,7 @@ class App extends LitElement {
 
   async #fetchBackups() {
     try {
-      this.backups = await fetchJSON('/backups');
+      this.backups = await fetchJSON<Backup[]>('/backups');
     } catch (err) {
       this.backups = [];
       this.dispatchEvent(
@@ -94,7 +95,7 @@ class App extends LitElement {
 
   async #fetchLastBackupTime() {
     try {
-      const lastBackupResponse = await fetchJSON('/last-backup-time');
+      const lastBackupResponse = await fetchJSON<Date>('/last-backup-time');
       const lastBackupTime = lastBackupResponse && new Date(lastBackupResponse);
       if (
         !lastBackupTime ||

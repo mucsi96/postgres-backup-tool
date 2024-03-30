@@ -24,6 +24,7 @@ declare global {
 
 @customElement({
   name: 'bt-notifications',
+  shadow: true,
   styles: css`
     :host {
       pointer-events: none;

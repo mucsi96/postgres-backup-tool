@@ -11,7 +11,10 @@ function getAppBasePath() {
   }
 }
 
-export async function fetchJSON(url: string, options?: RequestInit) {
+export async function fetchJSON<T>(
+  url: string,
+  options?: RequestInit
+): Promise<T> {
   const response = await fetch(getAppBasePath() + url, options);
 
   if (!response.ok) {
@@ -19,11 +22,11 @@ export async function fetchJSON(url: string, options?: RequestInit) {
   }
 
   try {
-    const data = await response.json();
+    const data = (await response.json()) as T;
 
     return data;
   } catch {
-    return undefined;
+    return undefined as T;
   }
 }
 

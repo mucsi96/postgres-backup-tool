@@ -3,14 +3,7 @@ import { property } from 'lit/decorators.js';
 import { customElement } from './components/utils';
 import { AppErrorEvent, BackupRestoredEvent } from './events';
 import { fetchJSON, formatSize, getRelativeTimeString } from './utils';
-
-type Backup = {
-  name: string;
-  lastModified: string;
-  totalRowCount: number;
-  size: number;
-  retentionPeriod: number;
-};
+import { Backup } from './models';
 
 function formatRetention(value: number) {
   if (!value) {
@@ -35,7 +28,7 @@ function formatRetention(value: number) {
 })
 class AppBackups extends LitElement {
   @property({ type: Array })
-  backups = [];
+  backups?: Backup[];
 
   @property({ type: String })
   selectedBackup?: string;

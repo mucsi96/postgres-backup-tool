@@ -1,10 +1,11 @@
 import '@ungap/custom-elements';
-import { CSSResult } from 'lit';
+import { CSSResult, html } from 'lit';
 
 type CustomElementOptions = {
   name: string;
   extends?: string;
   styles?: CSSResult;
+  shadow?: boolean;
 };
 
 function injectStyles({
@@ -26,12 +27,25 @@ function injectStyles({
 }
 
 export function customElement(options: CustomElementOptions) {
-  const { name, extends: extendsTag, styles } = options;
+  const { name, extends: extendsTag, styles, shadow } = options;
   return (elementClass: CustomElementConstructor) => {
-    styles && injectStyles(options);
-    elementClass.prototype.createRenderRoot = function () {
-      return this;
-    };
+    if (shadow) {
+      (elementClass as any).styles = styles;
+    } else {
+      styles && injectStyles(options);
+      elementClass.prototype.createRenderRoot = function () {
+        return this;
+      };
+    }
+
+    if (shadow) {
+      if (!elementClass.prototype.hasOwnProperty('render')) {
+        elementClass.prototype.render = function () {
+          return html`<slot></slot>`;
+        };
+      }
+    }
+
     customElements.define(name, elementClass, { extends: extendsTag });
   };
 }
