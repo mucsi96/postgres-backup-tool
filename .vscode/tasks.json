@@ -52,8 +52,14 @@
     },
     {
       "type": "shell",
-      "label": "Compose",
+      "label": "Compose up",
       "command": "node docker-compose.js | docker compose --file - up --force-recreate --remove-orphans --pull always",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Compose down",
+      "command": "node docker-compose.js | docker compose --file - down",
       "problemMatcher": []
     },
     {

@@ -1,13 +1,14 @@
-function getAppBasePath() {
+declare global {
+  interface Window {
+    apiContextPath: string;
+  }
+}
+
+function getAppBasePath(): string {
   if (import.meta.env.MODE === 'development') {
     return '/api';
   } else {
-    const cookies = Object.fromEntries(
-      decodeURIComponent(document.cookie)
-        .split(';')
-        .map((cookie) => cookie.split('='))
-    );
-    return cookies['base-path'];
+    return window.apiContextPath === '/' ? '' : window.apiContextPath;
   }
 }
 
