@@ -39,10 +39,15 @@
   },
   "remoteUser": "vscode",
   "postStartCommand": {
-    "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}"
+    "configure-git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+    "configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
   },
   "postCreateCommand": {
     "pip-install": "pip install -r requirements.txt",
     "install-plawright": "npx --yes playwright install --with-deps chromium"
-  }
+  },
+  // Required for Java dev containers
+  "mounts": [
+    "source=/var/run/docker.sock.raw,target=/var/run/docker.sock,type=bind"
+  ]
 }
