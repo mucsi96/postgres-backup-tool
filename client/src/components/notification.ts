@@ -28,7 +28,7 @@ export class NotificationEndEvent extends NotificationEvent {
 
 @customElement({
   name: 'bt-notification',
-  shadow: true,
+  extends: 'output',
   styles: css`
     @keyframes fade-in {
       from {
@@ -61,26 +61,20 @@ export class NotificationEndEvent extends NotificationEvent {
       animation: fade-in 0.3s ease, slide-in 0.3s ease,
         fade-out 0.3s ease 3s forwards;
 
+      &[type='error'] {
+        background-color: hsl(0, 96%, 77%);
+        color: hsl(0, 74%, 16%);
+      }
 
-    }
-
-    :host([type='error']) {
-      background-color: hsl(0, 96%, 77%);
-      color: hsl(0, 74%, 16%);
-    }
-
-    :host([type='success']) {
-      background-color: hsl(145, 78%, 68%);
-      color: hsl(145, 100%, 14%);
+      &[type='success'] {
+        background-color: hsl(145, 78%, 68%);
+        color: hsl(145, 100%, 14%);
+      }
     }
   `,
 })
-class BTNotification extends LitElement {
-  @property({ type: String })
-  type: 'error' | 'success' = 'success';
-
+export class BTNotification extends HTMLOutputElement {
   connectedCallback() {
-    super.connectedCallback();
     Promise.allSettled(
       this.getAnimations().map((animation) => animation.finished)
     ).then(() => this.dispatchEvent(new NotificationEndEvent()));

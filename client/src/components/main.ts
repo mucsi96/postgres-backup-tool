@@ -17,4 +17,4 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTMain extends HTMLElement {}
+export class BTMain extends HTMLElement {}

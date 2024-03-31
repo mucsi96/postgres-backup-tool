@@ -62,4 +62,4 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTTable extends HTMLTableElement {}
+export class BTTable extends HTMLTableElement {}

@@ -1,7 +1,9 @@
-import { LitElement, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import './notification';
 import {
+  BTNotification,
   ErrorNotificationEvent,
+  NotificationEndEvent,
   SuccessNotificationEvent,
 } from './notification';
 import { customElement } from './utils';
@@ -9,6 +11,7 @@ import { customElement } from './utils';
 interface CustomEventMap {
   'success-notification': SuccessNotificationEvent;
   'error-notification': ErrorNotificationEvent;
+  'notification-end': NotificationEndEvent;
 }
 declare global {
   interface Document {
@@ -24,7 +27,7 @@ declare global {
 
 @customElement({
   name: 'bt-notifications',
-  shadow: true,
+  extends: 'section',
   styles: css`
     :host {
       pointer-events: none;
@@ -38,9 +41,14 @@ declare global {
     }
   `,
 })
-class Notifications extends LitElement {
+export class BTNotifications extends HTMLElement {
   constructor() {
     super();
+    this.innerHTML = html`
+      <template>
+        <output is="bt-notification" role="status"></output>
+      </template>
+    `.strings.join('');
     document.addEventListener(
       'success-notification',
       (event: SuccessNotificationEvent) =>
@@ -51,16 +59,23 @@ class Notifications extends LitElement {
       (event: ErrorNotificationEvent) =>
         this.addNotification('error', event.detail)
     );
+    document.addEventListener(
+      'notification-end',
+      (event: NotificationEndEvent) => {
+        if (event.target && event.target instanceof HTMLElement) {
+          event.target.remove();
+        }
+      }
+    );
   }
 
   addNotification(type: string, text: string) {
-    const notification = document.createElement('bt-notification');
-    notification.setAttribute('type', type);
-    notification.appendChild(document.createTextNode(text));
-    notification.addEventListener('notification-end', () =>
-      this.removeChild(notification)
-    );
     const heightBefore = this.offsetHeight;
+    const notification = this.querySelector('template')?.content.firstElementChild?.cloneNode(
+      true
+    ) as BTNotification;
+    notification.textContent = text;
+    notification.setAttribute('type', type);
     this.appendChild(notification);
     const heightAfter = this.offsetHeight;
     const initialOffset = heightBefore - heightAfter;

@@ -48,4 +48,4 @@ import { customElement } from "./utils";
   `,
 
 })
-class BTButton extends HTMLButtonElement{}
+export class BTButton extends HTMLButtonElement{}

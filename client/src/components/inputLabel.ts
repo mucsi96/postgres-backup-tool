@@ -41,4 +41,4 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTInputLabel extends HTMLLabelElement {}
+export class BTInputLabel extends HTMLLabelElement {}

@@ -20,4 +20,4 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTBadge extends LitElement {}
+export class BTBadge extends LitElement {}

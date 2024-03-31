@@ -56,7 +56,7 @@ class App extends LitElement {
   totalRowCount?: number;
 
   @property({ type: Array })
-  backups?: Backup[]
+  backups?: Backup[];
 
   @property({ type: String })
   lastBackupTime?: string;
@@ -71,7 +71,10 @@ class App extends LitElement {
 
   async #fetchTables() {
     try {
-      const { tables, totalRowCount } = await fetchJSON<{tables: Table[], totalRowCount: number }>('/tables');
+      const { tables, totalRowCount } = await fetchJSON<{
+        tables: Table[];
+        totalRowCount: number;
+      }>('/tables');
       this.tables = tables;
       this.totalRowCount = totalRowCount;
     } catch (err) {
@@ -159,7 +162,7 @@ class App extends LitElement {
           ></app-backups>
         </div>
       </main>
-      <bt-notifications></bt-notifications>
+      <section is="bt-notifications"></section>
     `;
   }
 }

@@ -26,7 +26,7 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTHeader extends LitElement {
+export class BTHeader extends LitElement {
   render() {
     return html`
       <div>

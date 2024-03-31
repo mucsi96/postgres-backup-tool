@@ -27,4 +27,4 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTHeading extends HTMLHeadingElement {}
+export class BTHeading extends HTMLHeadingElement {}

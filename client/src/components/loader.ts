@@ -51,7 +51,7 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTLoader extends LitElement {
+export class BTLoader extends LitElement {
   render() {
     return html`
       <div></div>

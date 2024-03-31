@@ -20,7 +20,7 @@ import { customElement } from './utils';
     }
   `,
 })
-class BTRowSelector extends LitElement {
+export class BTRowSelector extends LitElement {
   @property({ type: Boolean })
   selected = false;
 
