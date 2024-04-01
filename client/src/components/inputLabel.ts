@@ -20,6 +20,7 @@ import { customElement } from './utils';
         color: white;
         font-size: 14px;
         font-weight: 400;
+        font-family: system-ui;
         padding: 10px;
         border-radius: 8px;
         outline: none;
