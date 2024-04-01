@@ -9,6 +9,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 public class DatabaseTest extends BaseIntegrationTest {
 
@@ -16,22 +18,22 @@ public class DatabaseTest extends BaseIntegrationTest {
   public void shows_total_record_count_in_db() {
     setupMocks();
 
-    assertThat(page.locator("app-heading:has-text('Records')"))
-        .hasText("Records 9");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Records"))).hasText("Records 9");
   }
 
   @Test
   public void shows_total_table_count_in_db() {
     setupMocks();
 
-    assertThat(page.locator("app-heading:has-text('Tables')"))
-        .hasText("Tables 2");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Tables"))).hasText("Tables 2");
   }
 
   @Test
   public void shows_tables_and_record_count_in_db() {
     setupMocks();
-    Locator tables = page.locator("app-table:near(:text('Tables'))");
+    Locator tables = page.locator("table:near(:text('Tables'))");
 
     assertThat(tables.locator("thead th"))
         .containsText(new String[] { "Name", "Records" });
@@ -49,50 +51,57 @@ public class DatabaseTest extends BaseIntegrationTest {
   public void restores_backup() {
     setupMocks();
 
-    page.click("app-button:has-text('Backup')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Backup")).click();
 
-    assertThat(page.locator("app-notification:has-text('Backup created')"))
-        .isVisible();
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup created")))
+            .isVisible();
 
     cleanupDB();
     page.reload();
 
-    assertThat(page.locator("app-heading:has-text('Tables')"))
-        .hasText("Tables 0");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Tables"))).hasText("Tables 0");
 
-    assertThat(page.locator("app-heading:has-text('Records')"))
-        .hasText("Records 0");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Records"))).hasText("Records 0");
 
-    Locator backupsTable = page.locator("app-table:near(:text('Backups'))");
+    Locator backupsTable = page.locator("table:near(:text('Backups'))");
     backupsTable.locator("td:has-text('1 day')").click();
-    page.click("app-button:has-text('Restore')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Restore")).click();
 
-    assertThat(page.locator("app-notification:has-text('Backup restored')"))
-        .isVisible();
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup restored")))
+            .isVisible();
 
-    assertThat(page.locator("app-heading:has-text('Tables')"))
-        .hasText("Tables 2");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Tables"))).hasText("Tables 2");
 
-    assertThat(page.locator("app-heading:has-text('Records')"))
-        .hasText("Records 9");
-
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Records"))).hasText("Records 9");
   }
 
   @Test
   public void doesnt_restore_excluded_tables() {
     setupMocks();
 
-    page.click("app-button:has-text('Backup')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Backup")).click();
 
-    assertThat(page.locator("app-notification:has-text('Backup created')"))
-        .isVisible();
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup created")))
+            .isVisible();
 
-    Locator backupsTable = page.locator("app-table:near(:text('Backups'))");
+    Locator backupsTable = page.locator("table:near(:text('Backups'))");
     backupsTable.locator("td:has-text('1 day')").click();
-    page.click("app-button:has-text('Restore')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Restore")).click();
 
-    assertThat(page.locator("app-notification:has-text('Backup restored')"))
-        .isVisible();
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup restored")))
+            .isVisible();
 
     List<Map<String, Object>> result = jdbcTemplate.queryForList(
         "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");

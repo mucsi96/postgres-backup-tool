@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.ScreenshotAnimations;
 
 public class ScreenshotOnFailure implements AfterEachCallback {
 
@@ -35,6 +36,7 @@ public class ScreenshotOnFailure implements AfterEachCallback {
 
   public void takeScreenshot(Page page, String name) {
     page.screenshot(new Page.ScreenshotOptions()
+        .setAnimations(ScreenshotAnimations.ALLOW)
         .setPath(Paths.get("screenshots/" + name + ".png")));
   }
 }

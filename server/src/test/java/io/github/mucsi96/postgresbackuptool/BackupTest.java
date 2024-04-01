@@ -8,6 +8,8 @@ import java.time.Period;
 import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 public class BackupTest extends BaseIntegrationTest {
 
@@ -19,8 +21,8 @@ public class BackupTest extends BaseIntegrationTest {
       createMockBackup(Instant.ofEpochSecond(1688042563), 1, 1);
     });
 
-    assertThat(page.locator("app-heading:has-text('Backups')"))
-        .hasText("Backups 3");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Backups"))).hasText("Backups 3");
   }
 
   @Test
@@ -31,8 +33,9 @@ public class BackupTest extends BaseIntegrationTest {
       createMockBackup(Instant.now().minus(Period.ofDays(7)), 1, 1);
     });
 
-    assertThat(page.locator("app-heading:has-text('Last backup')"))
-        .hasText("Last backup last week");
+    assertThat(page.getByRole(AriaRole.HEADING,
+        new Page.GetByRoleOptions().setName("Last backup")))
+            .hasText("Last backup last week");
   }
 
   @Test
@@ -43,10 +46,10 @@ public class BackupTest extends BaseIntegrationTest {
       createMockBackup(Instant.ofEpochSecond(1685682577), 9, 1);
     });
 
-    Locator backups = page.locator("app-table:near(:text('Backups'))");
+    Locator backups = page.locator("table:near(:text('Backups'))");
 
-    assertThat(backups.locator("thead th")).containsText(new String[] { "",
-        "Date", "Name", "Records", "Size", "Retention", "Action" });
+    assertThat(backups.locator("thead th")).containsText(
+        new String[] { "Date", "Name", "Records", "Size", "Retention" });
 
     assertThat(backups.locator("tbody tr")).hasCount(3);
 
@@ -69,11 +72,14 @@ public class BackupTest extends BaseIntegrationTest {
   @Test
   public void creates_backup() {
     setupMocks();
-    page.click("app-button:has-text('Backup')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Backup")).click();
 
-    assertThat(page.locator("app-notification:has-text('Backup created')"));
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup created")))
+            .isVisible();
 
-    Locator backups = page.locator("app-table:near(:text('Backups'))");
+    Locator backups = page.locator("table:near(:text('Backups'))");
 
     assertThat(backups.locator("tbody tr")).hasCount(1);
 
@@ -89,10 +95,13 @@ public class BackupTest extends BaseIntegrationTest {
     retentionPeriodInput.clear();
     retentionPeriodInput.fill("7");
 
-    page.click("app-button:has-text('Backup')");
-    assertThat(page.locator("app-notification:has-text('Backup created')"));
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Backup")).click();
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Backup created")))
+            .isVisible();
 
-    Locator backups = page.locator("app-table:near(:text('Backups'))");
+    Locator backups = page.locator("table:near(:text('Backups'))");
 
     assertThat(backups.locator("tbody tr")).hasCount(1);
 
@@ -109,11 +118,14 @@ public class BackupTest extends BaseIntegrationTest {
       createMockBackup(Instant.now().minus(Period.ofDays(1)), 4, 2);
     });
 
-    page.click("app-button:has-text('Cleanup')");
+    page.getByRole(AriaRole.BUTTON,
+        new Page.GetByRoleOptions().setName("Cleanup")).click();
 
-    assertThat(page.locator("app-notification:has-text('Cleanup started')"));
+    assertThat(page.getByRole(AriaRole.STATUS)
+        .filter(new Locator.FilterOptions().setHasText("Cleanup finished")))
+            .isVisible();
 
-    Locator backups = page.locator("app-table:near(:text('Backups'))");
+    Locator backups = page.locator("table:near(:text('Backups'))");
 
     assertThat(backups.locator("tbody tr")).hasCount(2);
 
