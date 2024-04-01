@@ -6,17 +6,25 @@ import { customElement } from './utils';
   extends: 'span',
   styles: css`
     :host {
-      background-color: white;
+      position: relative;
       color: rgb(30, 66, 159);
       display: inline-block;
-      padding: 0.125em 0.4em;
       font-weight: 700;
-      line-height: 1;
       white-space: nowrap;
-      border-radius: 0.6em;
       margin: 0 0.6em;
-      transform: scale(0.8) translateY(0.1em);
+      z-index: 1;
+      transform: scale(0.8) translateY(0.05em);
       transform-origin: center left;
+
+      &:before {
+        display: inline-block;
+        content: '';
+        inset: 0 -0.4em;
+        border-radius: 0.6em;
+        background-color: white;
+        position: absolute;
+        z-index: -1;
+      }
     }
   `,
 })

@@ -14,6 +14,8 @@ import { customElement } from "./utils";
       border-radius: 8px;
       color: white;
       font-weight: 500;
+      font-family: system-ui;
+      font-size: 14px;
       transition: background-color 0.3s;
 
       &:not([disabled]):hover {
