@@ -1,9 +1,9 @@
-import { LitElement, css } from 'lit';
+import { css } from 'lit';
 import { customElement } from './utils';
 
 @customElement({
   name: 'bt-badge',
-  shadow: true,
+  extends: 'span',
   styles: css`
     :host {
       background-color: white;
@@ -20,4 +20,4 @@ import { customElement } from './utils';
     }
   `,
 })
-export class BTBadge extends LitElement {}
+export class BTBadge extends HTMLSpanElement {}

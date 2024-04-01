@@ -40,12 +40,12 @@ class AppBackups extends LitElement {
     this.style.justifyContent = this.backups ? 'flex-start' : 'center';
 
     if (!this.backups) {
-      return html`<bt-loader></bt-loader>`;
+      return html`<div is="bt-loader"></div>`;
     }
 
     return html`
       <h2 is="bt-heading">
-        Backups <bt-badge>${this.backups.length}</bt-badge>
+        Backups <span is="bt-badge">${this.backups.length}</span>
       </h2>
       ${this.backups.length
         ? html`<table is="bt-table" id="backups">
@@ -77,11 +77,10 @@ class AppBackups extends LitElement {
           this.selectedBackup = backup.name;
         }}
       >
-        <td>
-          <bt-row-selector
-            ?selected=${backup.name === this.selectedBackup}
-          ></bt-row-selector>
-        </td>
+        <td
+          is="bt-row-selector"
+          ?selected=${backup.name === this.selectedBackup}
+        ></td>
         <td highlighted no-wrap>
           ${backup.lastModified
             ? getRelativeTimeString(new Date(backup.lastModified))

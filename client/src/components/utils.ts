@@ -1,5 +1,5 @@
 import '@ungap/custom-elements';
-import { CSSResult, html } from 'lit';
+import { CSSResult, TemplateResult, html } from 'lit';
 
 type CustomElementOptions = {
   name: string;
@@ -48,4 +48,10 @@ export function customElement(options: CustomElementOptions) {
 
     customElements.define(name, elementClass, { extends: extendsTag });
   };
+}
+
+export function htmlToString(html: TemplateResult<1>) {
+  const { strings, values } = html;
+  const v = [...values, '']; // + last emtpty part
+  return strings.reduce((acc, s, i) => acc + s + v[i], '');
 }

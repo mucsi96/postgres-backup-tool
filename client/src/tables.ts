@@ -42,16 +42,16 @@ class AppTables extends LitElement {
     this.style.justifyContent = this.tables ? 'flex-start' : 'center';
 
     if (!this.tables) {
-      return html`<bt-loader></bt-loader>`;
+      return html`<div is="bt-loader"></div>`;
     }
 
     const actionsDisabled = this.processing;
 
     return html`
-      <h2 is="bt-heading">Records <bt-badge>${this.totalCount}</bt-badge></h2>
+      <h2 is="bt-heading">Records <span is="bt-badge">${this.totalCount}</span></h2>
       <div class="tables">
         <h2 is="bt-heading">
-          Tables <bt-badge>${this.tables.length}</bt-badge>
+          Tables <span is="bt-badge">${this.tables.length}</span>
         </h2>
         ${this.tables.length
           ? html`<table is="bt-table">

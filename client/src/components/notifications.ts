@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit';
+import { css, html } from 'lit';
 import './notification';
 import {
   BTNotification,
@@ -6,7 +6,7 @@ import {
   NotificationEndEvent,
   SuccessNotificationEvent,
 } from './notification';
-import { customElement } from './utils';
+import { customElement, htmlToString } from './utils';
 
 interface CustomEventMap {
   'success-notification': SuccessNotificationEvent;
@@ -44,11 +44,11 @@ declare global {
 export class BTNotifications extends HTMLElement {
   constructor() {
     super();
-    this.innerHTML = html`
+    this.innerHTML = htmlToString(html`
       <template>
         <output is="bt-notification" role="status"></output>
       </template>
-    `.strings.join('');
+    `);
     document.addEventListener(
       'success-notification',
       (event: SuccessNotificationEvent) =>
@@ -71,9 +71,9 @@ export class BTNotifications extends HTMLElement {
 
   addNotification(type: string, text: string) {
     const heightBefore = this.offsetHeight;
-    const notification = this.querySelector('template')?.content.firstElementChild?.cloneNode(
-      true
-    ) as BTNotification;
+    const notification = this.querySelector(
+      'template'
+    )?.content.firstElementChild?.cloneNode(true) as BTNotification;
     notification.textContent = text;
     notification.setAttribute('type', type);
     this.appendChild(notification);

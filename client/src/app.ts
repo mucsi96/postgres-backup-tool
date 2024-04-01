@@ -127,9 +127,11 @@ class App extends LitElement {
   render() {
     return html`
       <header is="bt-header" title="Postgres Backup Tool">
-        <h3 is="bt-heading">
-          Last backup <bt-badge>${this.lastBackupTime}</bt-badge>
-        </h3>
+        <div>
+          <h3 is="bt-heading">
+            Last backup <span is="bt-badge">${this.lastBackupTime}</span>
+          </h3>
+        </div>
       </header>
       <main is="bt-main">
         <div id="main">

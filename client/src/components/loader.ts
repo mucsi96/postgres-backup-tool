@@ -1,9 +1,9 @@
-import { html, css, LitElement } from 'lit';
-import { customElement } from './utils';
+import { css, html } from 'lit';
+import { customElement, htmlToString } from './utils';
 
 @customElement({
   name: 'bt-loader',
-  shadow: true,
+  extends: 'div',
   styles: css`
     :host {
       display: grid;
@@ -12,30 +12,30 @@ import { customElement } from './utils';
       align-items: center;
       grid-template-columns: repeat(5, auto);
       gap: 3px;
-    }
 
-    div {
-      background-color: white;
-      opacity: 0.85;
-      height: 60px;
-      width: 7px;
-      display: inline-block;
-      animation: sk-stretchdelay 1.2s infinite ease-in-out;
+      div {
+        background-color: white;
+        opacity: 0.85;
+        height: 60px;
+        width: 7px;
+        display: inline-block;
+        animation: sk-stretchdelay 1.2s infinite ease-in-out;
 
-      &:nth-child(2) {
-        animation-delay: -1.1s;
-      }
+        &:nth-child(2) {
+          animation-delay: -1.1s;
+        }
 
-      &:nth-child(3) {
-        animation-delay: -1s;
-      }
+        &:nth-child(3) {
+          animation-delay: -1s;
+        }
 
-      &:nth-child(4) {
-        animation-delay: -0.9s;
-      }
+        &:nth-child(4) {
+          animation-delay: -0.9s;
+        }
 
-      &:nth-child(5) {
-        animation-delay: -0.8s;
+        &:nth-child(5) {
+          animation-delay: -0.8s;
+        }
       }
     }
 
@@ -51,14 +51,15 @@ import { customElement } from './utils';
     }
   `,
 })
-export class BTLoader extends LitElement {
-  render() {
-    return html`
+export class BTLoader extends HTMLDivElement {
+  constructor() {
+    super();
+    this.innerHTML = htmlToString(html`
       <div></div>
       <div></div>
       <div></div>
       <div></div>
       <div></div>
-    `;
+    `);
   }
 }

@@ -1,5 +1,5 @@
-import { LitElement, css, html } from 'lit';
-import { customElement } from './utils';
+import { css, html } from 'lit';
+import { customElement, htmlToString } from './utils';
 
 @customElement({
   name: 'bt-header',
@@ -15,7 +15,7 @@ import { customElement } from './utils';
       font-family: system-ui;
       font-size: 14px;
 
-      div {
+      > * {
         padding: 18px 1rem 19px;
         max-width: 90rem;
         margin: 0 auto;
@@ -26,13 +26,17 @@ import { customElement } from './utils';
     }
   `,
 })
-export class BTHeader extends LitElement {
-  render() {
-    return html`
-      <div>
-        <h1 is="bt-heading">${this.title}</h1>
-        ${this.children}
-      </div>
-    `;
+export class BTHeader extends HTMLElement {
+  template = document.createElement('template');
+
+  constructor() {
+    super();
+    this.template.innerHTML = htmlToString(html`
+      <h1 is="bt-heading">${this.title}</h1>
+    `);
+  }
+
+  connectedCallback() {
+    this.firstElementChild?.prepend(this.template.content.cloneNode(true));
   }
 }

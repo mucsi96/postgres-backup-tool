@@ -1,6 +1,5 @@
-import { css, LitElement } from 'lit';
+import { css } from 'lit';
 import { customElement } from './utils';
-import { property } from 'lit/decorators.js';
 
 export class NotificationEvent extends CustomEvent<string> {
   constructor(name: string, message?: string) {
