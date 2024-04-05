@@ -54,7 +54,7 @@ jobs:
         run: npm run build
       - name: Install Chromium with dependencies for Playwright
         working-directory: server
-        run: mvn exec:java -e -D -B exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
+        run: mvn exec:java -B -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
       - working-directory: server
         run: mvn test -B
   build-images:
