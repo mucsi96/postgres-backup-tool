@@ -46,6 +46,7 @@ jobs:
           cache: maven
           cache-dependency-path: server/pom.xml
       - name: Install Chromium with dependencies for Playwright
+        working-directory: client
         run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
       - working-directory: client
         run: npm ci
