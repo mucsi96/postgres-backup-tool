@@ -33,7 +33,6 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - run: npx playwright install --with-deps chromium
       - uses: ankane/setup-postgres@v1
         with:
           postgres-version: 15
@@ -45,6 +44,8 @@ jobs:
           java-version: 21
           cache: maven
           cache-dependency-path: server/pom.xml
+      - name: Install Chromium with dependencies for Playwright
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
       - working-directory: client
         run: npm ci
       - working-directory: client
