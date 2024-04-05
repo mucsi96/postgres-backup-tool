@@ -16,7 +16,7 @@ Simple PostgreSQL backup tool to S3 Object Storage with UI
 - Tested with Cloudflare R2 Object Storage
 
 ## Stack
-- Java 17
+- Java 21
 - Spring Boot 3
 - Web Components
 - Lit 2.x
