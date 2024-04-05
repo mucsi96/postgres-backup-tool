@@ -7,6 +7,10 @@ on:
   schedule:
     - cron: '7 0 * * 1'
 
+concurrency:
+  group: any
+  cancel-in-progress: true
+
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
