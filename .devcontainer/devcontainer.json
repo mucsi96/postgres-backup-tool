@@ -13,7 +13,7 @@
       "installMaven": true
     },
     "ghcr.io/robbert229/devcontainer-features/postgresql-client:1": {
-      "version": "15"
+      "version": "16"
     },
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },

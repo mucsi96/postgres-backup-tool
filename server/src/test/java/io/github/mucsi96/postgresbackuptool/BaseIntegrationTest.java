@@ -90,7 +90,7 @@ public class BaseIntegrationTest {
     }
 
     s3Mock = new S3MockContainer("2.13.0");
-    dbMock = new PostgreSQLContainer<>("postgres:15.3-alpine3.18");
+    dbMock = new PostgreSQLContainer<>("postgres:16.2-bullseye");
 
     if (System.getenv("DOCKER_NETWORK") != null) {
       Network network = new DevContainerNetwork();

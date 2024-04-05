@@ -12,7 +12,7 @@ Simple PostgreSQL backup tool to S3 Object Storage with UI
 - Exclude tables from backup
 - Can be used without UI as REST API. For example using a cronjob and curl
 - Fully covered with E2E Selenium tests
-- Compatible with PostgreSQL 15
+- Compatible with PostgreSQL 16
 - Tested with Cloudflare R2 Object Storage
 
 ## Stack

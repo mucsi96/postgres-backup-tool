@@ -31,7 +31,7 @@ const config = {
       image: "adobe/s3mock:3.1.0",
     },
     db: {
-      image: "postgres:15.3-bullseye",
+      image: "postgres:16.2-bullseye",
       environment: {
         POSTGRES_DB,
         POSTGRES_PASSWORD,
