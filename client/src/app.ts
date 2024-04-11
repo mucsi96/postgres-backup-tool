@@ -1,25 +1,11 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import './backups';
-import './components/badge';
-import './components/button';
-import './components/header';
-import './components/heading';
-import './components/loader';
-import './components/main';
-import {
-  ErrorNotificationEvent,
-  SuccessNotificationEvent,
-} from './components/notification';
-import './components/notifications';
-import './components/inputLabel';
-import './components/rowSelector';
-import './components/table';
-import { customElement } from './components/utils';
 import { AppErrorEvent } from './events';
 import './tables';
 import { fetchJSON, getRelativeTimeString } from './utils';
 import { Backup, Table } from './models';
+import { ErrorNotificationEvent, SuccessNotificationEvent, customElement } from '@mucsi96/ui-elements';
 
 interface CustomEventMap {
   'app-error': AppErrorEvent;

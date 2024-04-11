@@ -1,6 +1,5 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { customElement } from './components/utils';
 import {
   AppErrorEvent,
   BackupCreatedEvent,
@@ -8,6 +7,7 @@ import {
 } from './events';
 import { fetchJSON } from './utils';
 import { Table } from './models';
+import { customElement } from '@mucsi96/ui-elements';
 
 @customElement({
   name: 'app-tables',

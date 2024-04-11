@@ -1,9 +1,9 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { customElement } from './components/utils';
 import { AppErrorEvent, BackupRestoredEvent } from './events';
 import { fetchJSON, formatSize, getRelativeTimeString } from './utils';
 import { Backup } from './models';
+import { customElement } from '@mucsi96/ui-elements';
 
 function formatRetention(value: number) {
   if (!value) {
