@@ -19,7 +19,6 @@ Simple PostgreSQL backup tool to S3 Object Storage with UI
 - Java 21
 - Spring Boot 3
 - Web Components
-- Lit 2.x
 - Java AWS SDK 2.x 
 
 ## Required environment variables
