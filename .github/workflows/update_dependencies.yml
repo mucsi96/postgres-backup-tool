@@ -1,9 +1,9 @@
 name: Update dependencies
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   schedule:
     - cron: '7 0 * * 1'
 
@@ -22,6 +22,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup node
         uses: actions/setup-node@v4
-      # - env:
-      #     LOG_LEVEL: debug
+      - env:
+          LOG_LEVEL: debug
       - run: npx renovate --token ${{ secrets.GITHUB_TOKEN }} --platform github --autodiscover
