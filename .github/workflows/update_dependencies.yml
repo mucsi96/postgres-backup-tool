@@ -24,4 +24,4 @@ jobs:
         uses: actions/setup-node@v4
       - env:
           LOG_LEVEL: debug
-      - run: npx renovate --token ${{ secrets.GITHUB_TOKEN }} --platform github --autodiscover
+        run: npx renovate --token ${{ secrets.GITHUB_TOKEN }} --platform github --autodiscover
