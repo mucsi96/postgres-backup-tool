@@ -45,7 +45,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.25.25</version>
+            <version>2.25.31</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.16.0</version>
+            <version>2.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -64,7 +64,7 @@
         <dependency>
           <groupId>com.microsoft.playwright</groupId>
           <artifactId>playwright</artifactId>
-          <version>1.42.0</version>
+          <version>1.43.0</version>
           <scope>test</scope>
         </dependency>
         <dependency>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.adobe.testing</groupId>
             <artifactId>s3mock-testcontainers</artifactId>
-            <version>3.5.2</version>
+            <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
