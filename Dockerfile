@@ -8,7 +8,7 @@ COPY server .
 RUN mvn package -DskipTests -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM node:21 as build-client
+FROM node:22 as build-client
 
 WORKDIR /workspace/client
 
