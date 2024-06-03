@@ -45,7 +45,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.25.60</version>
+            <version>2.25.64</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.adobe.testing</groupId>
             <artifactId>s3mock-testcontainers</artifactId>
-            <version>3.8.0</version>
+            <version>3.9.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
