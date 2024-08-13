@@ -1,4 +1,3 @@
-const workspaceRoot = process.env.WORKSPACE_ROOT;
 const POSTGRES_DB = "postgres-backup-tool";
 const POSTGRES_USER = "postgres";
 const POSTGRES_PASSWORD = "postgres";
@@ -9,7 +8,7 @@ const config = {
   },
   services: {
     app: {
-      image: "mucsi96/postgres-backup-tool:latest",
+      build: ".",
       environment: {
         SERVER_SERVLET_CONTEXT_PATH: "/db",
         SPRING_ACTUATOR_PORT: "8082",
@@ -38,7 +37,7 @@ const config = {
         POSTGRES_USER,
       },
       volumes: [
-        `${workspaceRoot}/db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql`,
+        `./db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql`,
       ],
     },
   },

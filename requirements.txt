@@ -1,1 +1,1 @@
-https://github.com/mucsi96/publish-tools/releases/download/version-9/publish_tools-9.0.0-py2.py3-none-any.whl
+mucsi96.publish-tools == 35.0.0
