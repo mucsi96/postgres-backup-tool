@@ -1,0 +1,46 @@
+<h2 bt>
+  Records <span bt-badge>{{ totalRowCount() }}</span>
+</h2>
+<div class="tables">
+  <h2 bt>
+    Tables <span bt-badge>{{ tables()?.length }}</span>
+  </h2>
+  @if (tables()?.length) {
+  <table bt>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Records</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (table of tables(); track table.name) {
+      <tr>
+        <td highlighted>{{ table.name }}</td>
+        <td>{{ table.rowCount }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>
+<div class="backup">
+  <h2 bt>Backup</h2>
+  <label bt
+    >Retention period (days)<input
+      type="number"
+      value="${this.retentionPeriod}"
+      min="1"
+      max="356"
+      step="1"
+  /></label>
+  <section>
+    <button bt disabled="{{ actionsDisabled() }}">Backup</button>
+  </section>
+</div>
+<div class="cleanup">
+  <h2 bt>Cleanup</h2>
+  <section>
+    <button bt color="red" disabled="{{ actionsDisabled() }}">Cleanup</button>
+  </section>
+</div>

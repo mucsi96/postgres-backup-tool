@@ -1,0 +1,12 @@
+:host {
+  display: grid;
+  gap: 40px;
+  
+  .tables,
+  .backup,
+  .cleanup {
+    display: grid;
+    gap: 20px;
+  }
+}
+

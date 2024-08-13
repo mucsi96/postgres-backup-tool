@@ -1,0 +1,7 @@
+main {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+  gap: 32px;
+}
