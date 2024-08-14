@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { finalize, Observable, shareReplay } from 'rxjs';
+import { finalize, map, Observable, shareReplay, tap } from 'rxjs';
 import { Backup } from '../../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -19,6 +19,12 @@ export class BackupsService {
     this.$backups = this.http
       .get<Backup[]>(environment.apiContextPath + '/backups')
       .pipe(
+        map((backups) =>
+          backups.map((backup) => ({
+            ...backup,
+            lastModified: new Date(backup.lastModified),
+          }))
+        ),
         handleError('Could not fetch backups.'),
         shareReplay(1),
         finalize(() => this.loading.set(false))

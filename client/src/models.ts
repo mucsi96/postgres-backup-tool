@@ -1,6 +1,6 @@
 export type Backup = {
   name: string;
-  lastModified: string;
+  lastModified: Date;
   totalRowCount: number;
   size: number;
   retentionPeriod: number;

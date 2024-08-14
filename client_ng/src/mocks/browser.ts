@@ -33,16 +33,16 @@ const mocks = [
     return HttpResponse.json([
       {
         name: 'backup1',
-        lastModified: new Date().toISOString(),
+        lastModified: new Date(),
         totalRowCount: 4,
-        size: 1000,
+        size: 1024,
         retentionPeriod: 7,
       },
       {
         name: 'backup2',
-        lastModified: new Date().toISOString(),
+        lastModified: new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2),
         totalRowCount: 5,
-        size: 2000,
+        size: 2567,
         retentionPeriod: 14,
       },
     ]);
@@ -51,5 +51,5 @@ const mocks = [
 
 export async function setupMocks() {
   const worker = setupWorker(...mocks);
-  await worker.start({ onUnhandledRequest: 'bypass' });
+  await worker.start({ onUnhandledRequest: 'error' });
 }

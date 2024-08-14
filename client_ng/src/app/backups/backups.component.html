@@ -19,11 +19,11 @@
   </thead>
   <tbody>
     @for (backup of backups(); track backup.name) {
-    <tr (click)="selectBackup(backup)">
-      <td
-        bt-row-selector
-        [attr.aria-selected]="backup.name === selectedBackup()"
-      ></td>
+    <tr
+      (click)="selectBackup(backup)"
+      [attr.aria-selected]="backup.name === selectedBackup()"
+    >
+      <td bt-row-selector></td>
       <td highlighted no-wrap>
         @if (backup.lastModified) {
         {{ backup.lastModified | relativeTime }}
@@ -34,7 +34,11 @@
       <td no-wrap center-align>{{ backup.size | size }}</td>
       <td center-align>{{ backup.retentionPeriod | retention }}</td>
       <td center-align>
-        <button bt [disabled]="processing() || backup.name !== selectedBackup()" (click)="restoreBackup()">
+        <button
+          bt
+          [disabled]="processing() || backup.name !== selectedBackup()"
+          (click)="restoreBackup()"
+        >
           Restore
         </button>
       </td>
