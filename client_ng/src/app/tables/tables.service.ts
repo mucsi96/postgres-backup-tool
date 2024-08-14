@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Table } from '../../types';
-import { catchError, map, Observable, of, shareReplay } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ErrorNotificationEvent } from '@mucsi96/ui-elements';
+import { finalize, map, Observable, shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Table } from '../../types';
+import { handleError } from '../../utils/handleError';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,9 @@ export class TablesService {
     tables: Table[];
     totalRowCount: number;
   }>;
+  $cleanup: Observable<void>;
+  loading = signal(true);
+  processing = signal(false);
 
   constructor(private http: HttpClient) {
     this.$tables = this.http
@@ -22,14 +25,16 @@ export class TablesService {
         totalRowCount: number;
       }>(environment.apiContextPath + '/tables')
       .pipe(
-        catchError(() => {
-          document.dispatchEvent(
-            new ErrorNotificationEvent('Could not fetch tables.')
-          );
+        handleError('Could not fetch tables.'),
+        shareReplay(1),
+        finalize(() => this.loading.set(false))
+      );
 
-          return of();
-        }),
-        shareReplay(1)
+    this.$cleanup = this.http
+      .post<void>(environment.apiContextPath + '/cleanup', {})
+      .pipe(
+        handleError('Could not cleanup tables.'),
+        finalize(() => this.processing.set(false))
       );
   }
 
@@ -39,5 +44,18 @@ export class TablesService {
 
   getTotalRowCount() {
     return toSignal(this.$tables.pipe(map((data) => data.totalRowCount)));
+  }
+
+  isLoading() {
+    return this.loading;
+  }
+
+  cleanupTables() {
+    this.processing.set(true);
+    this.$cleanup.subscribe();
+  }
+
+  isProcessing() {
+    return this.processing;
   }
 }

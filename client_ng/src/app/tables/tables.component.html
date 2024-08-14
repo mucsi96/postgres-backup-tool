@@ -1,3 +1,6 @@
+@if (loading()) {
+<div role="progressbar" bt></div>
+} @else {
 <h2 bt>
   Records <span bt-badge>{{ totalRowCount() }}</span>
 </h2>
@@ -29,18 +32,21 @@
   <label bt
     >Retention period (days)<input
       type="number"
-      value="${this.retentionPeriod}"
+      [(value)]="retentionPeriod"
       min="1"
       max="356"
       step="1"
   /></label>
   <section>
-    <button bt disabled="{{ actionsDisabled() }}">Backup</button>
+    <button bt [disabled]="processing()">Backup</button>
   </section>
 </div>
 <div class="cleanup">
   <h2 bt>Cleanup</h2>
   <section>
-    <button bt color="red" disabled="{{ actionsDisabled() }}">Cleanup</button>
+    <button bt color="red" [disabled]="processing()" (click)="cleanup()">
+      Cleanup
+    </button>
   </section>
 </div>
+}

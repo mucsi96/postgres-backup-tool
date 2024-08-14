@@ -16,6 +16,10 @@ const mocks = [
       totalRowCount: number;
     });
   }),
+  http.post('/api/cleanup', async () => {
+    await delay(400);
+    return HttpResponse.json(null);
+  }),
 ];
 
 export async function setupMocks() {

@@ -1,4 +1,4 @@
-import { Component, computed, signal, Signal } from '@angular/core';
+import { Component, signal, Signal } from '@angular/core';
 import { Table } from '../../types';
 import { TablesService } from './tables.service';
 
@@ -12,10 +12,18 @@ import { TablesService } from './tables.service';
 export class TablesComponent {
   totalRowCount: Signal<number | undefined>;
   tables: Signal<Table[] | undefined>;
-  actionsDisabled = signal(false);
+  retentionPeriod = signal(1);
+  processing: Signal<boolean>;
+  loading: Signal<boolean>;
 
   constructor(private readonly tableService: TablesService) {
     this.tables = this.tableService.getTables();
     this.totalRowCount = this.tableService.getTotalRowCount();
+    this.loading = this.tableService.isLoading();
+    this.processing = this.tableService.isProcessing();
+  }
+
+  cleanup() {
+    this.tableService.cleanupTables();
   }
 }
