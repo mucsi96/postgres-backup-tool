@@ -1,6 +1,7 @@
-import { Component, signal, Signal } from '@angular/core';
+import { Component, computed, signal, Signal } from '@angular/core';
 import { Table } from '../../types';
 import { TablesService } from './tables.service';
+import { BackupsService } from '../backups/backups.service';
 
 @Component({
   selector: 'app-tables',
@@ -16,11 +17,22 @@ export class TablesComponent {
   processing: Signal<boolean>;
   loading: Signal<boolean>;
 
-  constructor(private readonly tableService: TablesService) {
+  constructor(
+    private readonly tableService: TablesService,
+    private readonly backupsService: BackupsService
+  ) {
     this.tables = this.tableService.getTables();
     this.totalRowCount = this.tableService.getTotalRowCount();
     this.loading = this.tableService.isLoading();
-    this.processing = this.tableService.isProcessing();
+    this.processing = computed(
+      () =>
+        this.tableService.isProcessing()() ||
+        this.backupsService.isProcessing()()
+    );
+  }
+
+  createBackup() {
+    this.backupsService.createBackup(this.retentionPeriod());
   }
 
   cleanup() {

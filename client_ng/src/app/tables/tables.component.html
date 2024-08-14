@@ -38,7 +38,7 @@
       step="1"
   /></label>
   <section>
-    <button bt [disabled]="processing()">Backup</button>
+    <button bt [disabled]="processing()" (click)="createBackup()">Backup</button>
   </section>
 </div>
 <div class="cleanup">

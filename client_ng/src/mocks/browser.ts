@@ -20,6 +20,33 @@ const mocks = [
     await delay(400);
     return HttpResponse.json(null);
   }),
+  http.post('/api/backup', async () => {
+    await delay(200);
+    return HttpResponse.json(null);
+  }),
+  http.post('/api/restore/:backupName', async () => {
+    await delay(200);
+    return HttpResponse.json(null);
+  }),
+  http.get('/api/backups', async () => {
+    await delay(200);
+    return HttpResponse.json([
+      {
+        name: 'backup1',
+        lastModified: new Date().toISOString(),
+        totalRowCount: 4,
+        size: 1000,
+        retentionPeriod: 7,
+      },
+      {
+        name: 'backup2',
+        lastModified: new Date().toISOString(),
+        totalRowCount: 5,
+        size: 2000,
+        retentionPeriod: 14,
+      },
+    ]);
+  }),
 ];
 
 export async function setupMocks() {

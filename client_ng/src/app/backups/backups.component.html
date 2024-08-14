@@ -1,0 +1,45 @@
+@if (loading()) {
+<div role="progressbar" bt></div>
+} @else {
+<h2 bt>
+  Backups <span bt-badge>{{ backups()?.length }}</span>
+</h2>
+@if (backups()?.length) {
+<table bt id="backups">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Date</th>
+      <th>Name</th>
+      <th center-align>Records</th>
+      <th center-align>Size</th>
+      <th center-align>Retention</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (backup of backups(); track backup.name) {
+    <tr (click)="selectBackup(backup)">
+      <td
+        bt-row-selector
+        [attr.aria-selected]="backup.name === selectedBackup()"
+      ></td>
+      <td highlighted no-wrap>
+        @if (backup.lastModified) {
+        {{ backup.lastModified | relativeTime }}
+        } @else { - }
+      </td>
+      <td no-wrap>{{ backup.name }}</td>
+      <td center-align>{{ backup.totalRowCount }}</td>
+      <td no-wrap center-align>{{ backup.size | size }}</td>
+      <td center-align>{{ backup.retentionPeriod | retention }}</td>
+      <td center-align>
+        <button bt [disabled]="processing() || backup.name !== selectedBackup()" (click)="restoreBackup()">
+          Restore
+        </button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+} }
