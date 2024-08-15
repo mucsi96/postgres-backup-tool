@@ -1,12 +1,13 @@
-import { Component, computed, signal, Signal } from '@angular/core';
+import { Component, computed, input, signal, Signal } from '@angular/core';
 import { Table } from '../../types';
-import { TablesService } from './tables.service';
 import { BackupsService } from '../backups/backups.service';
+import { TablesService } from './tables.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-tables',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.css',
 })
