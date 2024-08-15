@@ -1,4 +1,3 @@
-- add refetching on mutations
 - add last backup time
 - replace old ui with new angular based
 - create a new repo dedicated to Azure

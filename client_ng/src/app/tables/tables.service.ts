@@ -1,7 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { finalize, map, Observable, shareReplay } from 'rxjs';
+import {
+  BehaviorSubject,
+  finalize,
+  map,
+  Observable,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Table } from '../../types';
 import { handleError } from '../utils/handleError';
@@ -15,20 +23,26 @@ export class TablesService {
     tables: Table[];
     totalRowCount: number;
   }>;
+  $tableMutations = new BehaviorSubject<void>(undefined);
   loading = signal(true);
   processing = signal(false);
 
   constructor(private readonly http: HttpClient) {
-    this.$tables = this.http
-      .get<{
-        tables: Table[];
-        totalRowCount: number;
-      }>(environment.apiContextPath + '/tables')
-      .pipe(
-        handleError('Could not fetch tables.'),
-        shareReplay(1),
-        finalize(() => this.loading.set(false))
-      );
+    this.$tables = this.$tableMutations.pipe(
+      tap(() => this.loading.set(true)),
+      switchMap(() =>
+        this.http
+          .get<{
+            tables: Table[];
+            totalRowCount: number;
+          }>(environment.apiContextPath + '/tables')
+          .pipe(
+            handleError('Could not fetch tables.'),
+            shareReplay(1),
+            finalize(() => this.loading.set(false))
+          )
+      )
+    );
   }
 
   getTables() {
@@ -52,10 +66,12 @@ export class TablesService {
         finalize(() => this.processing.set(false))
       )
       .subscribe({
-        complete: () =>
+        complete: () => {
           document.dispatchEvent(
             new SuccessNotificationEvent('Backup restored')
-          ),
+          );
+          this.$tableMutations.next();
+        },
       });
   }
 
