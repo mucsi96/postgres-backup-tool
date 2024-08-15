@@ -1,25 +1,28 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  ErrorNotificationEvent,
+  SuccessNotificationEvent,
+} from '@mucsi96/ui-elements';
 import {
   BehaviorSubject,
   finalize,
   map,
   Observable,
   shareReplay,
-  Subject,
   switchMap,
   tap,
 } from 'rxjs';
-import { Backup } from '../../types';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Backup } from '../../types';
 import { handleError } from '../utils/handleError';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { SuccessNotificationEvent } from '@mucsi96/ui-elements';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackupsService {
+  $lastBackupTime: Observable<Date | undefined>;
   $backups: Observable<Backup[]>;
   $backupMutations = new BehaviorSubject<void>(undefined);
   loading = signal(true);
@@ -42,6 +45,32 @@ export class BackupsService {
         )
       )
     );
+    this.$lastBackupTime = this.$backupMutations.pipe(
+      switchMap(() =>
+        this.http.get<Date | undefined>(
+          environment.apiContextPath + '/last-backup-time'
+        )
+      ),
+      map((lastBackupTime) => lastBackupTime && new Date(lastBackupTime)),
+      tap((lastBackupTime) => {
+        if (
+          !lastBackupTime ||
+          lastBackupTime.getTime() +
+            1 /*d*/ * 24 /*h*/ * 60 /*m*/ * 60 /*s*/ * 1000 /*ms*/ <
+            Date.now()
+        ) {
+          document.dispatchEvent(
+            new ErrorNotificationEvent('No backup since one day')
+          );
+        }
+      }),
+      handleError('Unable to fetch last backup time'),
+      shareReplay(1)
+    );
+  }
+
+  getLastBackupTime() {
+    return toSignal(this.$lastBackupTime);
   }
 
   getBackups() {

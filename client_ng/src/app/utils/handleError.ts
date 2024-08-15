@@ -3,10 +3,10 @@ import { catchError, Observable, of, pipe } from 'rxjs';
 
 export function handleError<T>(message: string) {
   return pipe(
-    catchError<T, Observable<T>>((e) => {
+    catchError<T, Observable<T>>(() => {
       document.dispatchEvent(new ErrorNotificationEvent(message));
 
-      return of(e);
+      return of();
     })
   );
 }

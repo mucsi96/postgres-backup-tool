@@ -3,6 +3,9 @@ import { delay, http, HttpResponse } from 'msw';
 import { Table } from '../types';
 
 const mocks = [
+  http.get('/api/last-backup-time', async () => {
+    return HttpResponse.json(new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2));
+  }),
   http.get('/api/tables', async () => {
     await delay(600);
     return HttpResponse.json({
