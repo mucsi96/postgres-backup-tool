@@ -59,18 +59,18 @@ export class BackupsService {
       });
   }
 
-  restoreBackup(selectedBackup: string) {
+  cleanupBackups() {
     this.processing.set(true);
     this.http
-      .post<void>(environment.apiContextPath + `/restore/${selectedBackup}`, {})
+      .post<void>(environment.apiContextPath + '/cleanup', {})
       .pipe(
-        handleError('Could not restore backup.'),
+        handleError('Could not cleanup backups.'),
         finalize(() => this.processing.set(false))
       )
       .subscribe({
         complete: () =>
           document.dispatchEvent(
-            new SuccessNotificationEvent('Backup restored')
+            new SuccessNotificationEvent('Backup cleanup finished')
           ),
       });
   }

@@ -43,18 +43,18 @@ export class TablesService {
     return this.loading;
   }
 
-  cleanupTables() {
+  restoreBackup(selectedBackup: string) {
     this.processing.set(true);
     this.http
-      .post<void>(environment.apiContextPath + '/cleanup', {})
+      .post<void>(environment.apiContextPath + `/restore/${selectedBackup}`, {})
       .pipe(
-        handleError('Could not cleanup tables.'),
+        handleError('Could not restore backup.'),
         finalize(() => this.processing.set(false))
       )
       .subscribe({
         complete: () =>
           document.dispatchEvent(
-            new SuccessNotificationEvent('Cleanup finished')
+            new SuccessNotificationEvent('Backup restored')
           ),
       });
   }

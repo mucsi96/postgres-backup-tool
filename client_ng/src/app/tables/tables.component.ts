@@ -34,8 +34,4 @@ export class TablesComponent {
   createBackup() {
     this.backupsService.createBackup(this.retentionPeriod());
   }
-
-  cleanup() {
-    this.tableService.cleanupTables();
-  }
 }

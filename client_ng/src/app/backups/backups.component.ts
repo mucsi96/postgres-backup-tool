@@ -4,6 +4,7 @@ import { BackupsService } from './backups.service';
 import { SizePipe } from '../utils/size.pipe';
 import { RetentionPipe } from '../utils/retention.pipe';
 import { RelativeTimePipe } from '../utils/relativeTime.pipe';
+import { TablesService } from '../tables/tables.service';
 
 @Component({
   selector: 'app-backups',
@@ -18,7 +19,10 @@ export class BackupsComponent {
   loading: Signal<boolean>;
   selectedBackup: WritableSignal<string | undefined> = signal(undefined);
 
-  constructor(private readonly backupsService: BackupsService) {
+  constructor(
+    private readonly backupsService: BackupsService,
+    private readonly tableService: TablesService
+  ) {
     this.backups = this.backupsService.getBackups();
     this.processing = this.backupsService.isProcessing();
     this.loading = this.backupsService.isLoading();
@@ -31,10 +35,14 @@ export class BackupsComponent {
       return;
     }
 
-    this.backupsService.restoreBackup(selectedBackup);
+    this.tableService.restoreBackup(selectedBackup);
   }
 
   selectBackup(backup: Backup) {
     this.selectedBackup.set(backup.name);
+  }
+
+  cleanupBackups() {
+    this.backupsService.cleanupBackups();
   }
 }
