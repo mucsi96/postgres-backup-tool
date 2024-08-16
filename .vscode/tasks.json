@@ -3,6 +3,16 @@
   "tasks": [
     {
       "type": "shell",
+      "command": "bash",
+      "label": "Install dependencies",
+      "args": ["scripts/install_dependencies.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "label": "Build client",
       "command": "npm run build",
       "isBackground": true,

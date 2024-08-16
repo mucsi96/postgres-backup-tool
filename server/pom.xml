@@ -110,6 +110,7 @@
             <targetPath>static</targetPath>
             <includes>
               <include>**/*.js</include>
+              <include>**/*.css</include>
             </includes>
           </resource>
         </resources>

@@ -1,2 +1,1 @@
-- replace old ui with new angular based
 - create a new repo dedicated to Azure

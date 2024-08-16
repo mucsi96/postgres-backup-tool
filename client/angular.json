@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "client_ng": {
+    "client": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/client_ng",
+            "outputPath": {
+              "base": "dist",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -61,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "client_ng:build:production"
+              "buildTarget": "client:build:production"
             },
             "development": {
-              "buildTarget": "client_ng:build:development"
+              "buildTarget": "client:build:development"
             }
           },
           "defaultConfiguration": "development"
