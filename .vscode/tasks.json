@@ -63,7 +63,7 @@
     {
       "type": "shell",
       "label": "Compose up",
-      "command": "node docker-compose.js | docker compose --file - up --force-recreate --remove-orphans --pull always",
+      "command": "node docker-compose.js | docker compose --file - up --build --force-recreate --wait --remove-orphans --pull always",
       "problemMatcher": []
     },
     {

@@ -9,7 +9,7 @@ declare global {
 export const environment: {
   apiContextPath: string;
 } = {
-  apiContextPath: window.__env.apiContextPath,
+  apiContextPath: window.__env.apiContextPath.replace(/\/$/, ''),
 };
 
 export async function bootstrapEnvironment() {}
