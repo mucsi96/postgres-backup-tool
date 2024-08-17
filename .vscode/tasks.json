@@ -1,5 +1,13 @@
 {
   "version": "2.0.0",
+  "osx": {
+    "options": {
+      "shell": {
+        "executable": "${env:SHELL}",
+        "args": ["--login", "--interactive", "-c"]
+      }
+    }
+  },
   "tasks": [
     {
       "type": "shell",
