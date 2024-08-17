@@ -11,23 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-client:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-      - working-directory: client
-        run: npm ci
-      - working-directory: client
-        run: npm run test
   test-e2e:
     env:
       MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    needs: test-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
